@@ -1,7 +1,8 @@
 {
     "extends": "./tsconfig-base",
     "compilerOptions": {
-        "declaration": false
+		"declaration": false,
+        "outDir": "../lib"
     },
 	"files": [
 		"../src/electron-process-type.ts"

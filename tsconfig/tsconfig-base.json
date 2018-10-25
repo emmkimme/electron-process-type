@@ -18,6 +18,5 @@
 //        "inlineSourceMap": true,
         "stripInternal": true,
         "sourceMap": true,
-        "outDir" : "../lib"
     }
 }

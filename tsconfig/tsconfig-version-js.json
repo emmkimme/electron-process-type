@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig-base",
+    "compilerOptions": {
+        "declaration": false,
+        "outDir" : ".."
+    },
+	"files": [
+		"../v1.ts",
+		"../v2.ts",
+		"../v3.ts"
+	]
+}

@@ -3,7 +3,8 @@
     "compilerOptions": {
         "declaration": true,
         "noResolve": false,
-        "noEmitOnError": false
+        "noEmitOnError": false,
+        "outDir" : "../lib"
     },
 	"files": [
 		"../src/electron-process-type.ts"
