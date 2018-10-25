@@ -1,4 +1,4 @@
-/// <reference path='../typings/electron.d.ts'/>
+/// <reference path='./electron.d.ts'/>
 // Needed for having process.type property
 
 // See https://github.com/flexdinesh/browser-or-node
