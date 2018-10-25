@@ -11,7 +11,7 @@
                 "sourceMaps": true,
            
                 "args": [
-                    "test/**/*.test.js",
+                    "test/**/*-node.test.js",
                     "--no-timeouts", 
                     "--recursive"
                 ],
@@ -19,9 +19,54 @@
                 "runtimeExecutable": null,
                 "env": { "NODE_ENV": "testing"},
                 "outFiles": [
-                "${workspaceRoot}/lib/**/*.js",
-                "!${workspaceRoot}/node_modules/**/*.js"
-            ],
+                    "${workspaceRoot}/lib/**/*.js",
+                    "!${workspaceRoot}/node_modules/**/*.js"
+                ],
+            },
+            {
+                "name": "Run Electron mocha",
+                "type": "node",
+                "request": "launch",
+                "program": "${workspaceRoot}/node_modules/electron-mocha/bin/electron-mocha",
+                "stopOnEntry": false,
+                "port": 5858,
+                "protocol": "inspector",
+           
+                "sourceMaps": true,
+           
+                "args": [
+                    "--inspect-brk=5858",
+                    "test/**/*-main.test.js",
+                    "--no-timeouts", 
+                    "--recursive"
+                ],
+                "cwd": "${workspaceRoot}",
+                "runtimeExecutable": null,
+                "env": {
+                    "NODE_ENV": "testing"
+                },
+                "windows": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+                    }
+                },
+                "osx": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron"
+                    }
+                },
+                "linux": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron"
+                    }
+                },
+                "outputCapture": "std",
+                "console": "internalConsole",
+                "outFiles": [
+                    "${workspaceRoot}/lib/**/*.js",
+                    "!${workspaceRoot}/node_modules/**/*.js"
+                ],
             }
+
         ]
     }

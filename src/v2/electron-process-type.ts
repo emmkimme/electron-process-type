@@ -7,30 +7,16 @@ export type ElectronProcessType = 'node' | 'renderer' | 'main';
 export function GetElectronProcessType(): ElectronProcessType {
     // In a node process, we have to be very careful when requesting the 'electron' module
     let electronModuleExist = require.resolve('electron');
-    // A bit paranoid as previous require supposed to check existence of 'electron'
-    let electron: any;
-    if (electronModuleExist) {
-        try {
-            electron = require('electron');
-        }
-        catch (err) {
-            electronModuleExist = null;
-        }
-    }
     // Electron module not available we are 
     // - in a 'node' process
     // - in a 'renderer' process without nodeIntegration
-    // - in a 'renderer' process in sandbox mode    if (!electronModuleExist) {
+    // - in a 'renderer' process in sandbox mode
     if (!electronModuleExist) {
         return isBrowser ? 'renderer' : 'node';
     }
 
-    // We could be :
-    // -- in the 'browser' process
-    // -- in a 'renderer' process but in the preload file
-    // -- in a 'renderer' process with nodeIntegration
-
     // By default
+    // process.env['ELECTRON_RUN_AS_NODE']
     let electronProcessType: ElectronProcessType = 'node';
     // Try the official Electron method
     let processType = process.type;
@@ -46,16 +32,30 @@ export function GetElectronProcessType(): ElectronProcessType {
         }
     }
     else {
-        // If we find ipcRenderer then we are in a renderer process
-        if (electron.ipcRenderer) {
-            electronProcessType = 'renderer';
+        // We could be :
+        // -- in the 'browser' process
+        // -- in a 'renderer' process but in the preload file
+        // -- in a 'renderer' process with nodeIntegration
+        // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
+        // So do not trust the require success
+        try {
+            let electron = require('electron');
+            // If we find ipcRenderer then we are in a renderer process
+            if (electron.ipcRenderer) {
+                electronProcessType = 'renderer';
+            }
+            // If we find ipcMain then we are in the master/browser process
+            else if (electron.ipcMain) {
+                electronProcessType = 'main';
+            }
+            else if (isBrowser) {
+                electronProcessType = 'renderer';
+            }
         }
-        // If we find ipcMain then we are in the master/browser process
-        else if (electron.ipcMain) {
-            electronProcessType = 'main';
-        }
-        else if (isBrowser) {
-            electronProcessType = 'renderer';
+        catch (err) {
+            if (isBrowser) {
+                electronProcessType = 'renderer';
+            }
         }
     }
     return electronProcessType;
