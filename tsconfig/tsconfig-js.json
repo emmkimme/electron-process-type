@@ -5,6 +5,9 @@
         "outDir": "../lib"
     },
 	"files": [
-		"../src/electron-process-type.ts"
+		"../src/electron-process-type.ts",
+		"../src/v1/electron-process-type.ts",
+		"../src/v2/electron-process-type.ts",
+		"../src/v3/electron-process-type.ts"
 	]
 }
