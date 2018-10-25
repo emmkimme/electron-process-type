@@ -1,1 +1,1 @@
-export * from './src/v1/electron-process-type';
+export * from './lib/v1/electron-process-type';
