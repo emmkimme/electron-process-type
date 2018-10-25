@@ -41,5 +41,51 @@ export function CreateEnvironment(): Environment {
 The process.type *'browser'* introduces a lot of confusions as the notion of 'browser' process is more considered as a 'renderer' process : browserify, index-browser, [Browser or Node](https://github.com/flexdinesh/browser-or-node), ...  
 As Electron documentation, we use the term of 'main' rather than 'browser'. We keep 'renderer'.
 
+```ts
+import { GetElectronProcessType } from 'electron-process-type/lib/v2';
+
+export function CreateEnvironment(): Environment {
+    const processType = GetElectronProcessType();
+    switch (processType) {
+        case 'renderer': {
+...
+            break;
+        }
+        case 'main': {
+...
+            break;
+        }
+        default: {
+...
+            break;
+        }
+    }
+    return localInstance;
+}
+```
+
 ## v3/GetElectronProcessType(): 'node' | 'main' | 'browser';
 *BEWARE 'renderer' becomes 'browser' !!*
+
+```ts
+import * as electronProcessType from 'electron-process-type';
+
+export function CreateEnvironment(): Environment {
+    const processType = electronProcessType.v3.GetElectronProcessType();
+    switch (processType) {
+        case 'browser': {
+...
+            break;
+        }
+        case 'main': {
+...
+            break;
+        }
+        default: {
+...
+            break;
+        }
+    }
+    return localInstance;
+}
+```
