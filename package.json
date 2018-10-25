@@ -1,6 +1,6 @@
 {
   "name": "electron-process-type",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Retrieve the process type running your code : 'node',  'browser' or 'renderer'.",
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
     "typescript": "~2.9.2"
   },
   "scripts": {
-    "clean": "del-cli ./lib ./build ./dist",
+    "clean": "del-cli ./lib ./build ./dist *.js",
     "build": "npm run build-js && npm run build-declaration",
     "build-js": "tsc -p ./tsconfig/tsconfig-js.json",
     "build-declaration": "npm run build-declaration-ts",
