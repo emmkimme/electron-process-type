@@ -1,4 +1,4 @@
-import { GetElectronProcessType as GetElectronProcessTypeV2 } from '../v2/electron-process-type';
+import { GetElectronProcessType as GetElectronProcessTypeV2 } from '../v2/';
 
 export type ElectronProcessType = 'node' | 'browser' | 'main';
 

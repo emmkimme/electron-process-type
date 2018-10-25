@@ -26,16 +26,17 @@
       "email": "emmanuel.kimmerlin@thomsonreuters.com"
     }
   ],
-  "main": "./lib/electron-process-type.js",
-  "browser": "./lib/electron-process-type.js",
-  "types": "./lib/electron-process-type.d.ts",
+  "main": "./lib/index.js",
+  "browser": "./lib/index.js",
+  "types": "./lib/index.ts",
   "devDependencies": {
     "@types/node": "0.0.3",
     "chai": "^4.1.2",
     "del": "^2.2.2",
     "del-cli": "^0.2.1",
     "dts-bundle": "^0.6.1",
-    "electron": "^3.0.1",
+    "electron": "^3.0.6",
+    "electron-mocha": "^6.0.4",
     "mocha": "^4.0.1",
     "sinon": "^4.0.1",
     "tslint": "^4.1.1",
@@ -49,7 +50,10 @@
     "build-js-src": "tsc -p ./tsconfig/tsconfig-js.json",
     "build-declaration": "npm run build-declaration-src",
     "build-declaration-src": "tsc -p ./tsconfig/tsconfig-declaration.json",
-    "test": "mocha test --recursive",
+    "test": "npm run test-mocha && npm run test-mocha-main && npm run test-mocha-renderer",
+    "test-mocha": "mocha test/*.node.test.js --recursive",
+    "test-mocha-main": "electron-mocha test/*.main.test.js --recursive",
+    "test-mocha-renderer": "electron-mocha --renderer test/*.renderer.test.js --recursive",
     "tsc": "tsc",
     "tslint": "tslint",
     "publication": "npm publish ./ --registry https://registry.npmjs.org/"

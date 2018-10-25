@@ -1,1 +1,1 @@
-export * from './v3/electron-process-type';
+export * from './v3/';

@@ -5,7 +5,7 @@
         "outDir": "../lib"
     },
 	"files": [
-		"../src/electron-process-type.ts",
+		"../src/index.ts",
 		"../src/v1.ts",
 		"../src/v2.ts",
 		"../src/v3.ts"
