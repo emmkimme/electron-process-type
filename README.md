@@ -2,7 +2,7 @@
 A simple helper for having the process type running your code :
 - 'node'
 - 'browser' / 'main'
-- 'renderer'
+- 'renderer' / 'browser'
 
 Dependencies
 * http://nodejs.org/
