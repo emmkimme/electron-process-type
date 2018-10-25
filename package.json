@@ -1,6 +1,6 @@
 {
   "name": "electron-process-type",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Retrieve the process type running your code : 'node',  'browser' or 'renderer'.",
   "repository": {
     "type": "git",
@@ -51,7 +51,7 @@
     "build-js-src": "tsc -p ./tsconfig/tsconfig-js.json",
     "build-declaration": "npm run build-declaration-src",
     "build-declaration-src": "tsc -p ./tsconfig/tsconfig-declaration.json",
-    "copy-resources": "ncp ./src/v2/electron.d.ts ./lib/v2/electron.d.ts", 
+    "copy-resources": "echo ncp ./src/v2/electron.d.ts ./lib/v2/electron.d.ts", 
     "test": "npm run test-mocha && npm run test-mocha-main && npm run test-mocha-renderer",
     "test-mocha": "mocha test/*-node.test.js --recursive",
     "test-mocha-main": "electron-mocha test/*-main.test.js --recursive",

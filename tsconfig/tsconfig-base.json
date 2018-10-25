@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "types" : ["node"],
+        "typeRoots" : ["./src/typings"],
 		"module": "commonjs",
 		"moduleResolution": "node",
 //        "lib": ["dom", "es2015.promise", "es5"],
