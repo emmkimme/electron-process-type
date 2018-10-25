@@ -26,9 +26,9 @@
       "email": "emmanuel.kimmerlin@thomsonreuters.com"
     }
   ],
-  "main": "./lib/index.js",
-  "browser": "./lib/index.js",
-  "types": "./lib/index.ts",
+  "main": "./lib/electron-process-type.js",
+  "browser": "./lib/electron-process-type.js",
+  "types": "./lib/electron-process-type.d.ts",
   "devDependencies": {
     "@types/node": "0.0.3",
     "chai": "^4.1.2",
