@@ -1,3 +1,6 @@
+/// <reference path='../typings/electron.d.ts'/>
+// Needed for having process.type property
+
 // See https://github.com/flexdinesh/browser-or-node
 const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
 // const isNode =  (typeof process !== 'undefined') &&  (process.versions != null) && (process.versions.node != null);
@@ -7,6 +10,7 @@ export type ElectronProcessType = 'node' | 'renderer' | 'main';
 export function GetElectronProcessType(): ElectronProcessType {
     // In a node process, we have to be very careful when requesting the 'electron' module
     let electronModuleExist = require.resolve('electron');
+
     // Electron module not available we are 
     // - in a 'node' process
     // - in a 'renderer' process without nodeIntegration
@@ -15,8 +19,7 @@ export function GetElectronProcessType(): ElectronProcessType {
         return isBrowser ? 'renderer' : 'node';
     }
 
-    // By default
-    // process.env['ELECTRON_RUN_AS_NODE']
+    // By default (process.env['ELECTRON_RUN_AS_NODE'] ?)
     let electronProcessType: ElectronProcessType = 'node';
     // Try the official Electron method
     let processType = process.type;
@@ -32,10 +35,7 @@ export function GetElectronProcessType(): ElectronProcessType {
         }
     }
     else {
-        // We could be :
-        // -- in the 'browser' process
-        // -- in a 'renderer' process but in the preload file
-        // -- in a 'renderer' process with nodeIntegration
+        // Ultimate fallback
         // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
         // So do not trust the require success
         try {
@@ -44,7 +44,7 @@ export function GetElectronProcessType(): ElectronProcessType {
             if (electron.ipcRenderer) {
                 electronProcessType = 'renderer';
             }
-            // If we find ipcMain then we are in the master/browser process
+            // If we find ipcMain then we are in the master/browser/main process
             else if (electron.ipcMain) {
                 electronProcessType = 'main';
             }

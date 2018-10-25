@@ -2,7 +2,7 @@
         "version": "0.2.0",
         "configurations": [
             {
-                "name": "Run mocha",
+                "name": "Run Test Node",
                 "type": "node",
                 "request": "launch",
                 "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
@@ -24,7 +24,7 @@
                 ],
             },
             {
-                "name": "Run Electron mocha",
+                "name": "Run Test Main",
                 "type": "node",
                 "request": "launch",
                 "program": "${workspaceRoot}/node_modules/electron-mocha/bin/electron-mocha",
@@ -37,6 +37,53 @@
                 "args": [
                     "--inspect-brk=5858",
                     "test/**/*-main.test.js",
+                    "--no-timeouts", 
+                    "--recursive"
+                ],
+                "cwd": "${workspaceRoot}",
+                "runtimeExecutable": null,
+                "env": {
+                    "NODE_ENV": "testing"
+                },
+                "windows": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+                    }
+                },
+                "osx": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron"
+                    }
+                },
+                "linux": {
+                    "env": {
+                        "ELECTRON_PATH": "${workspaceRoot}/node_modules/.bin/electron"
+                    }
+                },
+                "outputCapture": "std",
+                "console": "internalConsole",
+                "outFiles": [
+                    "${workspaceRoot}/lib/**/*.js",
+                    "!${workspaceRoot}/node_modules/**/*.js"
+                ],
+            },
+            {
+                "name": "Run Test Renderer",
+                "type": "node",
+                "request": "launch",
+                "program": "${workspaceRoot}/node_modules/electron-mocha/bin/electron-mocha",
+                "stopOnEntry": false,
+                "port": 5858,
+                "protocol": "inspector",
+           
+                "sourceMaps": true,
+           
+                "args": [
+                    "--inspect-brk=5858",
+                    "--remote-debugging-port=8315",
+                    "test/**/*-renderer.test.js",
+                    "--renderer",
+                    "--interactive",
                     "--no-timeouts", 
                     "--recursive"
                 ],
