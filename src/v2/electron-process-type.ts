@@ -12,7 +12,6 @@ export function GetElectronProcessType(): ElectronProcessType {
     let electronProcessType: ElectronProcessType = 'node';
     
     // Try the official Electron method
-    // Do we have to check process.env['ELECTRON_RUN_AS_NODE'] ????
     let processType = process.type;
     if (processType === 'browser'){
         electronProcessType = 'main';
@@ -26,39 +25,40 @@ export function GetElectronProcessType(): ElectronProcessType {
     // - in a renderer process with nodeIntegration=false
     // - in a renderer process preload with sandbox=true
     else {
+        // Do we have to check process.env['ELECTRON_RUN_AS_NODE'] ????
         // By default
         electronProcessType = isBrowser ? 'renderer' : 'node';
 
-        // In a node process, we have to be very careful when requesting the 'electron' module
-        let electron: any;
-        try {
-            electron = require('electron');
-        }
-        catch (err) {
-            electron = null;
-        }
-        // Electron module not available we are 
-        // - in a 'node' process
-        // - in a 'renderer' process without nodeIntegration
-        // - in a 'renderer' process in sandbox mode
-        if (electron) {
-            // Ultimate fallback
-            // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
-            // So do not trust the require success
-            try {
-                // If we find ipcRenderer then we are in a renderer process
-                if (electron.ipcRenderer) {
-                    electronProcessType = 'renderer';
-                }
-                // If we find ipcMain then we are in the master/browser/main process
-                // Supposed to be managed at the beginning !!
-                else if (electron.ipcMain) {
-                    electronProcessType = 'main';
-                }
-            }
-            catch (err) {
-            }
-        }
+        // // In a node process, we have to be very careful when requesting the 'electron' module
+        // let electron: any;
+        // try {
+        //     electron = require('electron');
+        // }
+        // catch (err) {
+        //     electron = null;
+        // }
+        // // Electron module not available we are 
+        // // - in a 'node' process
+        // // - in a 'renderer' process without nodeIntegration
+        // // - in a 'renderer' process in sandbox mode
+        // if (electron) {
+        //     // Ultimate fallback
+        //     // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
+        //     // So do not trust the require success
+        //     try {
+        //         // If we find ipcRenderer then we are in a renderer process
+        //         if (electron.ipcRenderer) {
+        //             electronProcessType = 'renderer';
+        //         }
+        //         // If we find ipcMain then we are in the master/browser/main process
+        //         // Supposed to be managed at the beginning !!
+        //         else if (electron.ipcMain) {
+        //             electronProcessType = 'main';
+        //         }
+        //     }
+        //     catch (err) {
+        //     }
+        // }
     }
     return electronProcessType;
 }

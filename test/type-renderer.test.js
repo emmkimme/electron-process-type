@@ -1,30 +1,30 @@
 const chai = require('chai');
 const assert = chai.assert;
+const expect = chai.expect;
 
 describe('GetElectronProcessType in renderer process', function () {
 
   it(`v1`, function () {
     const electronProcessTypeModule = require('../lib');
-    assert(electronProcessTypeModule.GetElectronProcessType() == 'renderer');
+    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
   });
 
   it(`v2 - 1`, function () {
     const electronProcessTypeModule = require('../lib');
-    assert(electronProcessTypeModule.v2.GetElectronProcessType() == 'renderer');
+    expect(electronProcessTypeModule.v2.GetElectronProcessType()).to.equal('renderer');
   });
   it(`v2 - 2`, function () {
     const electronProcessTypeModule = require('../lib/v2');
-    assert(electronProcessTypeModule.GetElectronProcessType() == 'renderer');
+    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
   });
   it(`v2 - 3`, function () {
     const electronProcessTypeModule = require('../lib/v2');
-    assert(electronProcessTypeModule.GetElectronProcessType() == 'renderer');
+    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
   });
 
   it(`v3`, function () {
     const electronProcessTypeModule = require('../lib');
-    assert(electronProcessTypeModule.v3.GetElectronProcessType() == 'browser');
-
+    expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('browser');
   });
 });
 

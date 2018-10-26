@@ -12,52 +12,23 @@ __export(require("./v2/electron-process-type"));
 Object.defineProperty(exports, "__esModule", { value: true });
 const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
 function GetElectronProcessType() {
-    let electron;
-    try {
-        electron = require('electron');
-    }
-    catch (err) {
-        electron = null;
-    }
-    if (!electron) {
-        return isBrowser ? 'renderer' : 'node';
-    }
     let electronProcessType = 'node';
     let processType = process.type;
-    if (processType) {
-        switch (processType) {
-            case 'browser':
-                electronProcessType = 'main';
-                break;
-            case 'renderer':
-                electronProcessType = 'renderer';
-                break;
-        }
+    if (processType === 'browser') {
+        electronProcessType = 'main';
+    }
+    else if (processType === 'renderer') {
+        electronProcessType = 'renderer';
     }
     else {
-        try {
-            if (electron.ipcRenderer) {
-                electronProcessType = 'renderer';
-            }
-            else if (electron.ipcMain) {
-                electronProcessType = 'main';
-            }
-            else if (isBrowser) {
-                electronProcessType = 'renderer';
-            }
-        }
-        catch (err) {
-            if (isBrowser) {
-                electronProcessType = 'renderer';
-            }
-        }
+        electronProcessType = isBrowser ? 'renderer' : 'node';
     }
     return electronProcessType;
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
 }).call(this,require('_process'))
-},{"_process":3,"electron":"electron"}],3:[function(require,module,exports){
+},{"_process":3}],3:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
