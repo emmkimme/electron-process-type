@@ -1,6 +1,6 @@
 {
   "name": "electron-process-type",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Retrieve the process type running your code : 'node',  'browser' or 'renderer'.",
   "repository": {
     "type": "git",
