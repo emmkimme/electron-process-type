@@ -8,53 +8,51 @@ const isBrowser = (typeof window !== 'undefined') && (typeof window.document !==
 export type ElectronProcessType = 'node' | 'renderer' | 'main';
 
 export function GetElectronProcessType(): ElectronProcessType {
-    // In a node process, we have to be very careful when requesting the 'electron' module
-    let electronModuleExist = require.resolve('electron');
-
-    // Electron module not available we are 
-    // - in a 'node' process
-    // - in a 'renderer' process without nodeIntegration
-    // - in a 'renderer' process in sandbox mode
-    if (!electronModuleExist) {
-        return isBrowser ? 'renderer' : 'node';
-    }
-
-    // By default (process.env['ELECTRON_RUN_AS_NODE'] ?)
+    // By default
     let electronProcessType: ElectronProcessType = 'node';
+    
     // Try the official Electron method
+    // Do we have to check process.env['ELECTRON_RUN_AS_NODE'] ????
     let processType = process.type;
-    // May be null in Electron sandbox mode
-    if (processType) {
-        switch(processType) {
-            case 'browser': 
-                electronProcessType = 'main';
-                break;
-            case 'renderer': 
-                electronProcessType = 'renderer';
-                break;
-        }
+    if (processType === 'browser'){
+        electronProcessType = 'main';
     }
+    else if (processType === 'renderer') {
+        electronProcessType = 'renderer';
+    }
+    // 'process.type' may be null in Chomium sandbox mode (--enable-sandbox)
     else {
-        // Ultimate fallback
-        // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
-        // So do not trust the require success
+        // By default
+        electronProcessType = isBrowser ? 'renderer' : 'node';
+
+        // In a node process, we have to be very careful when requesting the 'electron' module
+        let electron: any;
         try {
-            let electron = require('electron');
-            // If we find ipcRenderer then we are in a renderer process
-            if (electron.ipcRenderer) {
-                electronProcessType = 'renderer';
-            }
-            // If we find ipcMain then we are in the master/browser/main process
-            else if (electron.ipcMain) {
-                electronProcessType = 'main';
-            }
-            else if (isBrowser) {
-                electronProcessType = 'renderer';
-            }
+            electron = require('electron');
         }
         catch (err) {
-            if (isBrowser) {
-                electronProcessType = 'renderer';
+            electron = null;
+        }
+        // Electron module not available we are 
+        // - in a 'node' process
+        // - in a 'renderer' process without nodeIntegration
+        // - in a 'renderer' process in sandbox mode
+        if (electron) {
+            // Ultimate fallback
+            // In development environment, 'electron' can be found in node_modules because declared as a devDependencies 
+            // So do not trust the require success
+            try {
+                // If we find ipcRenderer then we are in a renderer process
+                if (electron.ipcRenderer) {
+                    electronProcessType = 'renderer';
+                }
+                // If we find ipcMain then we are in the master/browser/main process
+                // Supposed to be managed at the beginning !!
+                else if (electron.ipcMain) {
+                    electronProcessType = 'main';
+                }
+            }
+            catch (err) {
             }
         }
     }
