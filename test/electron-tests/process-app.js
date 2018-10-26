@@ -4,10 +4,13 @@ const path = require('path')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 
+let done
+let x = 0, y = 0
+
 function createWindow(title, webPreferences) {
     // Create the browser window.
-    let win = new BrowserWindow({ width: 800, height: 600, webPreferences })
-    win.loadFile(path.join(__dirname, 'process-app.html'))
+    let win = new BrowserWindow({ x, y, width: 800, height: 200, webPreferences })
+    win.loadFile(path.join(__dirname, 'process-page.html'))
 
     // Open the DevTools.
     win.webContents.openDevTools()
@@ -21,34 +24,25 @@ function createWindow(title, webPreferences) {
         win = null
     })
 
+    y += 200
+    if (y > 800) {
+        y = 0
+        x += 800
+    }
     return win;
 }
 
-let win1
-let win2
-let win3
-let win4
-let win5
-let win6
 function createWindows() {
-    if (win1 == null) {
-        win1 = createWindow('{}', {})
-    }
-    if (win2 == null) {
-        win2 = createWindow('nodeIntegration: false', { nodeIntegration: false })
-    }
-    if (win3 == null) {
-        win3 = createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true })
-    }
-    if (win4 == null) {
-        win4= createWindow('{}', { preload: path.join(__dirname, 'process-app-preload.js') })
-    }
-    if (win5 == null) {
-        win5 = createWindow('nodeIntegration: false', { nodeIntegration: false, preload: path.join(__dirname, 'process-app-preload.js') })
-    }
-    if (win6 == null) {
-        win6 = createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-app-preload.js') })
-    }
+    done = true
+    createWindow('{}', {})
+    createWindow('nodeIntegration: false', { nodeIntegration: false })
+    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true })
+    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true })
+
+    createWindow('{}', { preload: path.join(__dirname, 'process-page-preload.bundle.js') })
+    createWindow('nodeIntegration: false', { nodeIntegration: false, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
+    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
+    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
 }
 
 // This method will be called when Electron has finished
@@ -68,7 +62,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win1 == null) {
+    if (!done) {
         createWindows();
     }
 })

@@ -1,5 +1,14 @@
 # electron-process-type
-A simple helper for having the process type running your code :
+
+The Electron process.type has some limitations.
+It does not work in following context :
+* in a node process
+* in a renderer when Chromium is in sandbox (--enable-sandbox=true)
+* in a renderer when Renderer is in sandbox=true
+* in a renderer when nodeIntegration=false
+* in preload file of a renderer
+
+This is a simple helper which returns the process type hosting your code whatever the context :
 - 'node'
 - 'browser' / 'main'
 - 'renderer' / 'browser'

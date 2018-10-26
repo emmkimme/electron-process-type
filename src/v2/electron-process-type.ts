@@ -20,7 +20,11 @@ export function GetElectronProcessType(): ElectronProcessType {
     else if (processType === 'renderer') {
         electronProcessType = 'renderer';
     }
-    // 'process.type' may be null in Chomium sandbox mode (--enable-sandbox)
+    // 'process.type' may be null
+    // - in a node process
+    // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox)
+    // - in a renderer process with nodeIntegration=false
+    // - in a renderer process preload with sandbox=true
     else {
         // By default
         electronProcessType = isBrowser ? 'renderer' : 'node';
