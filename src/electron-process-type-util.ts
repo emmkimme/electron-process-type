@@ -15,7 +15,7 @@ export enum ElectronProcessTypeFlags {
     ElectronNode = 0x0010, // Node | Electron,
     ElectronBrowser = 0x0011, // Browser | Electron,
     Main = 0x0100,
-    ElectronMain = 0x0110, // Node | Electron | Main,
+    ElectronMainNode = 0x0110, // Node | Electron | Main,
 }
 
 /** @internal */
@@ -24,7 +24,7 @@ export type ElectronProcessType =
     ElectronProcessTypeFlags.Browser |
     ElectronProcessTypeFlags.ElectronBrowser |
     ElectronProcessTypeFlags.ElectronNode |
-    ElectronProcessTypeFlags.ElectronMain;
+    ElectronProcessTypeFlags.ElectronMainNode;
 
 /** @internal */
 export function IsProcessNode() {
@@ -52,7 +52,7 @@ export function GetElectronProcessType(): ElectronProcessType {
     // Try the official Electron method
     const processType = process.type;
     if (processType === 'browser') {
-        electronProcessType = ElectronProcessTypeFlags.ElectronMain;
+        electronProcessType = ElectronProcessTypeFlags.ElectronMainNode;
     }
     else if (processType === 'renderer') {
         electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;

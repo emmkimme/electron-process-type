@@ -5,7 +5,7 @@ export type ElectronProcessType = 'node' | 'browser' | 'renderer';
 export function GetElectronProcessType(): ElectronProcessType {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessTypeFlags.ElectronMain:
+        case util.ElectronProcessTypeFlags.ElectronMainNode:
             return 'browser';
         case util.ElectronProcessTypeFlags.Node:
         case util.ElectronProcessTypeFlags.ElectronNode:

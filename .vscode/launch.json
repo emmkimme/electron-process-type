@@ -74,7 +74,7 @@
                 ],
             },
             {
-                "name": "Run Test Renderer",
+                "name": "Run Test Electron Renderer",
                 "type": "node",
                 "request": "launch",
                 "program": "${workspaceRoot}/node_modules/electron-mocha/bin/electron-mocha",

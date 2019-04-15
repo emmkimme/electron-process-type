@@ -11,7 +11,7 @@ var ElectronProcessTypeFlags;
     ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronNode"] = 16] = "ElectronNode";
     ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronBrowser"] = 17] = "ElectronBrowser";
     ElectronProcessTypeFlags[ElectronProcessTypeFlags["Main"] = 256] = "Main";
-    ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronMain"] = 272] = "ElectronMain";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronMainNode"] = 272] = "ElectronMainNode";
 })(ElectronProcessTypeFlags = exports.ElectronProcessTypeFlags || (exports.ElectronProcessTypeFlags = {}));
 function IsProcessNode() {
     const electronProcessType = GetElectronProcessType();
@@ -32,7 +32,7 @@ function GetElectronProcessType() {
     let electronProcessType = ElectronProcessTypeFlags.Node;
     const processType = process.type;
     if (processType === 'browser') {
-        electronProcessType = ElectronProcessTypeFlags.ElectronMain;
+        electronProcessType = ElectronProcessTypeFlags.ElectronMainNode;
     }
     else if (processType === 'renderer') {
         electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;
@@ -107,7 +107,7 @@ const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessTypeFlags.ElectronMain:
+        case util.ElectronProcessTypeFlags.ElectronMainNode:
             return 'browser';
         case util.ElectronProcessTypeFlags.Node:
         case util.ElectronProcessTypeFlags.ElectronNode:
@@ -134,7 +134,7 @@ const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessTypeFlags.ElectronMain:
+        case util.ElectronProcessTypeFlags.ElectronMainNode:
             return 'main';
         case util.ElectronProcessTypeFlags.Node:
         case util.ElectronProcessTypeFlags.ElectronNode:
@@ -161,7 +161,7 @@ const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessTypeFlags.ElectronMain:
+        case util.ElectronProcessTypeFlags.ElectronMainNode:
             return 'main';
         case util.ElectronProcessTypeFlags.Node:
         case util.ElectronProcessTypeFlags.ElectronNode:
@@ -192,8 +192,8 @@ exports.IsProcessElectron = electron_process_type_util_1.IsProcessElectron;
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessTypeFlags.ElectronMain:
-            return 'electron-main';
+        case util.ElectronProcessTypeFlags.ElectronMainNode:
+            return 'electron-main-node';
         case util.ElectronProcessTypeFlags.Node:
             return 'node';
         case util.ElectronProcessTypeFlags.ElectronNode:

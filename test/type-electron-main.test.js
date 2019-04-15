@@ -25,7 +25,7 @@ describe('GetElectronProcessType in Electron main process', function () {
 
   it(`v4`, function () {
     const electronProcessTypeModule = require('../lib');
-    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('electron-main');
+    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('electron-main-node');
   });
 });
 
