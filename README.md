@@ -11,7 +11,7 @@ It does not work in following context :
 This is a simple helper which returns the process type hosting your code whatever the context :
 - 'node' / 'electron-node' (No Electron API available)
 - 'browser' / 'main' / 'electron-main' (Electron API available)
-- 'renderer' / 'browser'
+- 'renderer' / 'browser' / 'electron-browser'
 
 There are different versions which use either Electron semantic (renderer, main) or Browser semantic (browser, electron-main).
 
@@ -102,7 +102,7 @@ export function CreateEnvironment(): Environment {
 }
 ```
 
-## v4/GetElectronProcessType(): 'electron-node' | 'electron-main' | 'browser' | 'node';
+## v4/GetElectronProcessType(): 'electron-node' | 'electron-main' | 'electron-browser' | 'browser' | 'node';
 Identify node process running under Electron ('electron-node' / 'electron-main') vs pure node process ('node')
 ```ts
 import * as electronProcessType from 'electron-process-type';

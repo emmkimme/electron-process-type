@@ -2,7 +2,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
 
-describe('GetElectronProcessType in renderer process', function () {
+describe('GetElectronProcessType in Electron renderer process', function () {
 
   it(`v1`, function () {
     const electronProcessTypeModule = require('../lib');
@@ -25,7 +25,7 @@ describe('GetElectronProcessType in renderer process', function () {
 
   it(`v4`, function () {
     const electronProcessTypeModule = require('../lib');
-    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('browser');
+    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('electron-browser');
   });
 });
 

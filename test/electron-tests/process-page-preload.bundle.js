@@ -3,21 +3,54 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
+var ElectronProcessTypeFlags;
+(function (ElectronProcessTypeFlags) {
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["Node"] = 0] = "Node";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["Browser"] = 1] = "Browser";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["Electron"] = 16] = "Electron";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronNode"] = 16] = "ElectronNode";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronBrowser"] = 17] = "ElectronBrowser";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["Main"] = 256] = "Main";
+    ElectronProcessTypeFlags[ElectronProcessTypeFlags["ElectronMain"] = 272] = "ElectronMain";
+})(ElectronProcessTypeFlags = exports.ElectronProcessTypeFlags || (exports.ElectronProcessTypeFlags = {}));
+function IsProcessNode() {
+    const electronProcessType = GetElectronProcessType();
+    return electronProcessType & ElectronProcessTypeFlags.Node;
+}
+exports.IsProcessNode = IsProcessNode;
+function IsProcessBrowser() {
+    const electronProcessType = GetElectronProcessType();
+    return electronProcessType & ElectronProcessTypeFlags.Browser;
+}
+exports.IsProcessBrowser = IsProcessBrowser;
+function IsProcessElectron() {
+    const electronProcessType = GetElectronProcessType();
+    return electronProcessType & ElectronProcessTypeFlags.Electron;
+}
+exports.IsProcessElectron = IsProcessElectron;
 function GetElectronProcessType() {
-    let electronProcessType = 'node';
+    let electronProcessType = ElectronProcessTypeFlags.Node;
     const processType = process.type;
     if (processType === 'browser') {
-        electronProcessType = 'electron-main';
+        electronProcessType = ElectronProcessTypeFlags.ElectronMain;
     }
     else if (processType === 'renderer') {
-        electronProcessType = 'browser';
+        electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;
     }
     else {
         if (isBrowser) {
-            electronProcessType = 'browser';
+            electronProcessType = ElectronProcessTypeFlags.Browser;
+            try {
+                const electron = require('electron');
+                if (electron.ipcRenderer) {
+                    electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;
+                }
+            }
+            catch (err) {
+            }
         }
         else {
-            electronProcessType = process.env['ELECTRON_RUN_AS_NODE'] ? 'electron-node' : 'node';
+            electronProcessType = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessTypeFlags.ElectronNode : ElectronProcessTypeFlags.Node;
         }
     }
     return electronProcessType;
@@ -25,7 +58,7 @@ function GetElectronProcessType() {
 exports.GetElectronProcessType = GetElectronProcessType;
 
 }).call(this,require('_process'))
-},{"_process":4}],2:[function(require,module,exports){
+},{"_process":4,"electron":"electron"}],2:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -40,12 +73,13 @@ const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case 'electron-main':
+        case util.ElectronProcessTypeFlags.ElectronMain:
             return 'main';
-        case 'node':
-        case 'electron-node':
+        case util.ElectronProcessTypeFlags.Node:
+        case util.ElectronProcessTypeFlags.ElectronNode:
             return 'node';
-        case 'browser':
+        case util.ElectronProcessTypeFlags.Browser:
+        case util.ElectronProcessTypeFlags.ElectronBrowser:
             return 'renderer';
     }
 }

@@ -9,26 +9,26 @@ const expect = chai.expect;
 
 describe('GetElectronProcessType in Electron node process', function () {
   it(`v1`, function () {
-    const electronProcessTypeModule = require('../../lib');
+    const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('node');
   });
 
   it(`v2 - 1`, function () {
-    const electronProcessTypeModule = require('../../lib');
+    const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v2.GetElectronProcessType()).to.equal('node');
   });
   it(`v2 - 2`, function () {
-    const electronProcessTypeModule = require('../../lib/v2');
+    const electronProcessTypeModule = require('../lib/v2');
     expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('node');
   });
 
   it(`v3`, function () {
-    const electronProcessTypeModule = require('../../lib');
+    const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('node');
   });
 
   it(`v4`, function () {
-    const electronProcessTypeModule = require('../../lib');
+    const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('electron-node');
   });
 });

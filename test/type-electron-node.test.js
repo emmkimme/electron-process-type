@@ -41,7 +41,7 @@ function RunMochaNode(args) {
 describe('GetElectronProcessType in Electron node launcher', function () {
     it('Node.js process', () => {
         return RunMochaNode([
-            path.join(__dirname, 'electron-tests', 'electron-node.test.js'),
+            path.join(__dirname, 'type-electron-node.script.js'),
             '--reporter', 'spec',
             '--no-timeouts',
             '--colors',
