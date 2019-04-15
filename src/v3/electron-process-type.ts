@@ -1,13 +1,16 @@
-import { GetElectronProcessType as GetElectronProcessTypeV2 } from '../v2/electron-process-type';
+import * as util from '../electron-process-type-util';
 
 export type ElectronProcessType = 'node' | 'browser' | 'main';
 
 export function GetElectronProcessType(): ElectronProcessType {
-    let electronProcessTypeV2 = GetElectronProcessTypeV2();
-    switch(electronProcessTypeV2) {
-        case 'renderer':
+    const electronProcessType = util.GetElectronProcessType();
+    switch(electronProcessType) {
+        case 'electron-main':
+            return 'main';
+        case 'node':
+        case 'electron-node':
+            return 'node';
+        case 'browser':
             return 'browser';
-        default :
-            return electronProcessTypeV2 as ElectronProcessType;
     }
 }

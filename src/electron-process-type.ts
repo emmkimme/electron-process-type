@@ -11,14 +11,21 @@ import { ElectronProcessType as ElectronProcessTypeV2 } from './v2';
 import { GetElectronProcessType as GetElectronProcessTypeV3 } from './v3';
 import { ElectronProcessType as ElectronProcessTypeV3 } from './v3';
 
+import { GetElectronProcessType as GetElectronProcessTypeV4 } from './v4';
+import { ElectronProcessType as ElectronProcessTypeV4 } from './v4';
+
 export namespace v1 {
-    export let GetElectronProcessType: () => ElectronProcessTypeV1 = GetElectronProcessTypeV1;
+    export const GetElectronProcessType: () => ElectronProcessTypeV1 = GetElectronProcessTypeV1;
 }
 
 export namespace v2 {
-    export let GetElectronProcessType: () => ElectronProcessTypeV2 = GetElectronProcessTypeV2;
+    export const GetElectronProcessType: () => ElectronProcessTypeV2 = GetElectronProcessTypeV2;
 }
 
 export namespace v3 {
-    export let GetElectronProcessType: () => ElectronProcessTypeV3 = GetElectronProcessTypeV3;
+    export const GetElectronProcessType: () => ElectronProcessTypeV3 = GetElectronProcessTypeV3;
+}
+
+export namespace v4 {
+    export const GetElectronProcessType: () => ElectronProcessTypeV4 = GetElectronProcessTypeV4;
 }

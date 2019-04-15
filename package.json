@@ -1,6 +1,6 @@
 {
   "name": "electron-process-type",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Retrieve the process type running your code : 'node',  'browser' or 'renderer'.",
   "repository": {
     "type": "git",
@@ -38,12 +38,12 @@
     "dts-bundle": "^0.6.1",
     "electron": "^3.0.6",
     "electron-mocha": "^6.0.4",
-    "mocha": "^4.0.1",
+    "mocha": "^6.1.3",
     "ncp": "^2.0.0",
     "sinon": "^4.0.1",
     "tslint": "^4.1.1",
     "tslint-microsoft-contrib": "^4.0.1",
-    "typescript": "~2.9.2"
+    "typescript": "^3.4.3"
   },
   "scripts": {
     "clean": "del-cli ./lib ./build ./dist",
@@ -56,10 +56,11 @@
     "browserify-test": "npm run browserify-test-preload && npm run browserify-test-js",
     "browserify-test-preload": "browserify -o ./test/electron-tests/process-page-preload.bundle.js -x electron ./test/electron-tests/process-page-preload.js",
     "browserify-test-js": "browserify -o ./test/electron-tests/process-page.bundle.js -x electron ./test/electron-tests/process-page.js",
-    "test": "npm run test-mocha && npm run test-mocha-main && npm run test-mocha-renderer",
-    "test-mocha": "mocha test/*-node.test.js --recursive",
-    "test-mocha-main": "electron-mocha test/*-main.test.js --recursive",
-    "test-mocha-renderer": "electron-mocha --renderer test/*-renderer.test.js --recursive",
+    "test": "npm run test-mocha-node && npm run test-mocha-electron-main && npm run test-mocha-electron-node && npm run test-mocha-browser",
+    "test-mocha-node": "mocha test/*-node.test.js",
+    "test-mocha-electron-main": "electron-mocha test/*electron-main.test.js",
+    "test-mocha-electron-node": "electron-mocha test/*electron-node.test.js",
+    "test-mocha-browser": "electron-mocha --renderer test/*-browser.test.js",
     "tsc": "tsc",
     "tslint": "tslint",
     "publication": "npm publish ./ --registry https://registry.npmjs.org/"

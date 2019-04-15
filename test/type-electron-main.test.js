@@ -2,7 +2,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
 
-describe('GetElectronProcessType in main process', function () {
+describe('GetElectronProcessType in Electron main process', function () {
 
   it(`v1`, function () {
     const electronProcessTypeModule = require('../lib');
@@ -17,14 +17,15 @@ describe('GetElectronProcessType in main process', function () {
     const electronProcessTypeModule = require('../lib/v2');
     expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('main');
   });
-  it(`v2 - 3`, function () {
-    const electronProcessTypeModule = require('../lib/v2');
-    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('main');
-  });
 
   it(`v3`, function () {
     const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('main');
+  });
+
+  it(`v4`, function () {
+    const electronProcessTypeModule = require('../lib');
+    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('electron-main');
   });
 });
 

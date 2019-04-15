@@ -17,14 +17,15 @@ describe('GetElectronProcessType in renderer process', function () {
     const electronProcessTypeModule = require('../lib/v2');
     expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
   });
-  it(`v2 - 3`, function () {
-    const electronProcessTypeModule = require('../lib/v2');
-    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
-  });
 
   it(`v3`, function () {
     const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('browser');
+  });
+
+  it(`v4`, function () {
+    const electronProcessTypeModule = require('../lib');
+    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('browser');
   });
 });
 

@@ -17,14 +17,15 @@ describe('GetElectronProcessType in node process', function () {
     const electronProcessTypeModule = require('../lib/v2');
     expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('node');
   });
-  it(`v2 - 3`, function () {
-    const electronProcessTypeModule = require('../lib/v2');
-    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('node');
-  });
 
   it(`v3`, function () {
     const electronProcessTypeModule = require('../lib');
     expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('node');
+  });
+
+  it(`v4`, function () {
+    const electronProcessTypeModule = require('../lib');
+    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('node');
   });
 });
 

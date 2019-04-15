@@ -1,4 +1,31 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function (process){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
+function GetElectronProcessType() {
+    let electronProcessType = 'node';
+    const processType = process.type;
+    if (processType === 'browser') {
+        electronProcessType = 'electron-main';
+    }
+    else if (processType === 'renderer') {
+        electronProcessType = 'browser';
+    }
+    else {
+        if (isBrowser) {
+            electronProcessType = 'browser';
+        }
+        else {
+            electronProcessType = process.env['ELECTRON_RUN_AS_NODE'] ? 'electron-node' : 'node';
+        }
+    }
+    return electronProcessType;
+}
+exports.GetElectronProcessType = GetElectronProcessType;
+
+}).call(this,require('_process'))
+},{"_process":4}],2:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -6,29 +33,25 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./v2/electron-process-type"));
 
-},{"./v2/electron-process-type":2}],2:[function(require,module,exports){
-(function (process){
+},{"./v2/electron-process-type":3}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
+const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
-    let electronProcessType = 'node';
-    let processType = process.type;
-    if (processType === 'browser') {
-        electronProcessType = 'main';
+    const electronProcessType = util.GetElectronProcessType();
+    switch (electronProcessType) {
+        case 'electron-main':
+            return 'main';
+        case 'node':
+        case 'electron-node':
+            return 'node';
+        case 'browser':
+            return 'renderer';
     }
-    else if (processType === 'renderer') {
-        electronProcessType = 'renderer';
-    }
-    else {
-        electronProcessType = isBrowser ? 'renderer' : 'node';
-    }
-    return electronProcessType;
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
-}).call(this,require('_process'))
-},{"_process":3}],3:[function(require,module,exports){
+},{"../electron-process-type-util":1}],4:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -214,7 +237,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (process){
 
 window.addEventListener('load', () => {
@@ -240,4 +263,4 @@ window.addEventListener('load', () => {
 })
 
 }).call(this,require('_process'))
-},{"../../lib/v2":1,"_process":3}]},{},[4]);
+},{"../../lib/v2":2,"_process":4}]},{},[5]);

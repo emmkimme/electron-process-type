@@ -9,12 +9,15 @@ It does not work in following context :
 * in preload file of a renderer
 
 This is a simple helper which returns the process type hosting your code whatever the context :
-- 'node'
-- 'browser' / 'main'
+- 'node' / 'electron-node' (No Electron API available)
+- 'browser' / 'main' / 'electron-main' (Electron API available)
 - 'renderer' / 'browser'
+
+There are different versions which use either Electron semantic (renderer, main) or Browser semantic (browser, electron-main).
 
 Dependencies
 * http://nodejs.org/
+
 
 # API
 ## v1/GetElectronProcessType(): 'node' | 'browser' | 'renderer';
@@ -98,3 +101,29 @@ export function CreateEnvironment(): Environment {
     return localInstance;
 }
 ```
+
+## v4/GetElectronProcessType(): 'electron-node' | 'electron-main' | 'browser' | 'node';
+Identify node process running under Electron ('electron-node' / 'electron-main') vs pure node process ('node')
+```ts
+import * as electronProcessType from 'electron-process-type';
+
+export function CreateEnvironment(): Environment {
+    const processType = electronProcessType.v4.GetElectronProcessType();
+    switch (processType) {
+        case 'browser': {
+...
+            break;
+        }
+        case 'electron-main': {
+...
+            break;
+        }
+        default: {
+...
+            break;
+        }
+    }
+    return localInstance;
+}
+```
+
