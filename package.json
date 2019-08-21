@@ -1,7 +1,7 @@
 {
   "name": "electron-process-type",
-  "version": "3.0.0",
-  "description": "Retrieve the process type running your code : 'node',  'browser' or 'renderer'.",
+  "version": "4.0.0",
+  "description": "Retrieve the process type running your code : 'node',  'browser', 'renderer' or 'webworker'.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emmkimme/electron-process-type.git"
@@ -12,7 +12,9 @@
     "electron",
     "node",
     "browser",
-    "renderer"
+    "renderer",
+    "worker",
+    "webworker"
   ],
   "author": "Emmanuel Kimmerlin",
   "license": "MIT",

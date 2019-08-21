@@ -1,83 +1,100 @@
 /// <reference types='electron'/>
 // Needed for having process.type property
 
-// See https://github.com/flexdinesh/browser-or-node
-const isBrowser = (typeof window !== 'undefined') && (typeof window.document !== 'undefined');
-// const isNode =  (typeof process !== 'undefined') &&  (process.versions != null) && (process.versions.node != null);
+// Helpers
+const isBrowser = (typeof window === 'object') && (typeof window.document === 'object');
+const isWebWorker = (typeof self === 'object') && self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope');
+
+// Types of context
+const ProcessContextUndefined = 0x00000000;
+const ProcessContextNode      = 0x00000001;
+const ProcessContextBrowser   = 0x00000010;
+const ProcessContextWorker    = 0x00100000;
+
+// Types of process
+const ProcessElectron        = 0x00010000;
+const ProcessElectronMain    = 0x00030000;
 
 /** @internal */
-export enum ElectronProcessTypeFlags {
-    Node = 0x0000,
-    Browser = 0x0001,
-    Electron = 0x0010,
-    // Explicit set value else
-    // Enum type 'ElectronProcessTypeFlags' has members with initializers that are not literals.ts(2535)
-    ElectronNode = 0x0010, // Node | Electron,
-    ElectronBrowser = 0x0011, // Browser | Electron,
-    Main = 0x0100,
-    ElectronMainNode = 0x0110, // Node | Electron | Main,
+export enum ElectronProcessType {
+    Undefined         = ProcessContextUndefined,
+    Node              = ProcessContextNode,
+    Browser           = ProcessContextBrowser,
+    Worker            = ProcessContextWorker,
+    ElectronNode      = ProcessContextNode | ProcessElectron,
+    ElectronBrowser   = ProcessContextBrowser | ProcessElectron,
+    ElectronMainNode  = ProcessContextNode | ProcessElectronMain
 }
 
 /** @internal */
-export type ElectronProcessType =
-    ElectronProcessTypeFlags.Node |
-    ElectronProcessTypeFlags.Browser |
-    ElectronProcessTypeFlags.ElectronBrowser |
-    ElectronProcessTypeFlags.ElectronNode |
-    ElectronProcessTypeFlags.ElectronMainNode;
-
-/** @internal */
 export function IsProcessNode() {
-    const electronProcessType = GetElectronProcessType();
-    return electronProcessType & ElectronProcessTypeFlags.Node;
+    const processContext = GetElectronProcessType();
+    return processContext & ProcessContextNode;
 }
 
 /** @internal */
 export function IsProcessBrowser() {
-    const electronProcessType = GetElectronProcessType();
-    return electronProcessType & ElectronProcessTypeFlags.Browser;
+    const processContext = GetElectronProcessType();
+    return processContext & ProcessContextBrowser;
+}
+
+/** @internal */
+export function IsProcessWorker() {
+    const processContext = GetElectronProcessType();
+    return processContext & ProcessContextWorker;
 }
 
 /** @internal */
 export function IsProcessElectron() {
-    const electronProcessType = GetElectronProcessType();
-    return electronProcessType & ElectronProcessTypeFlags.Electron;
+    const processContext = GetElectronProcessType();
+    return processContext & ProcessElectron;
 }
 
 /** @internal */
 export function GetElectronProcessType(): ElectronProcessType {
     // By default
-    let electronProcessType: ElectronProcessType = ElectronProcessTypeFlags.Node;
-
-    // Try the official Electron method
-    const processType = process.type;
-    if (processType === 'browser') {
-        electronProcessType = ElectronProcessTypeFlags.ElectronMainNode;
-    }
-    else if (processType === 'renderer') {
-        electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;
-    }
-    // 'process.type' may be null
-    // - in a node process
-    // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox)
-    // - in a renderer process with nodeIntegration=false
-    // - in a renderer process preload with sandbox=true
-    else {
-        // By default
-        if (isBrowser) {
-            electronProcessType = ElectronProcessTypeFlags.Browser;
+    let processContext = ElectronProcessType.Undefined;
+    // Use what it seems the most relevant method for detecting we are in a browser
+    if (isBrowser) {
+        processContext = ElectronProcessType.Browser;
+        // Try the official Electron method
+        if ((typeof process ==='object') && (process.type === 'renderer')) {
+            processContext = ElectronProcessType.ElectronBrowser;
+        }
+        // 'process.type' may be null
+        // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox, webPreferences.sandbox = true)
+        // - in a renderer process with nodeIntegration=false
+        // - in a renderer process preload with sandbox=true
+        else if ((typeof navigator === 'object') && (typeof navigator.appVersion === 'string') && (navigator.appVersion.indexOf(' Electron/') >= 0)) {
+            processContext = ElectronProcessType.ElectronBrowser;
             try {
+                // Would work in a preload
                 const electron = require('electron');
                 if (electron.ipcRenderer) {
-                    electronProcessType = ElectronProcessTypeFlags.ElectronBrowser;
+                    processContext = ElectronProcessType.ElectronBrowser;
                 }
             }
             catch (err) {
             }
         }
+    }
+    else if (isWebWorker) {
+        processContext = ElectronProcessType.Worker;
+    }
+    else if (typeof process ==='object') {
+        processContext = ElectronProcessType.Node;
+        // Try the official Electron method
+        if (process.type === 'browser') {
+            processContext = ElectronProcessType.ElectronMainNode;
+        }
         else {
-            electronProcessType = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessTypeFlags.ElectronNode : ElectronProcessTypeFlags.Node;
+            if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
+                processContext = ElectronProcessType.ElectronMainNode;
+            }
+            else {
+                processContext = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessType.ElectronNode : ElectronProcessType.Node;
+            }
         }
     }
-    return electronProcessType;
+    return processContext;
 }

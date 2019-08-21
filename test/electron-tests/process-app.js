@@ -13,7 +13,7 @@ function createWindow(title, webPreferences) {
     win.loadFile(path.join(__dirname, 'process-page.html'))
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
     win.setTitle(JSON.stringify(webPreferences))
 
     // Emitted when the window is closed.
