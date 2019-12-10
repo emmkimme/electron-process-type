@@ -54,7 +54,7 @@ export function IsProcessElectron() {
 export function GetElectronProcessType(): ElectronProcessType {
     // By default
     let processContext = ElectronProcessType.Undefined;
-    // Use what it seems the most relevant method for detecting we are in a browser
+    // Use what it seems the most relevant method for detecting if we are in a browser
     if (isBrowser) {
         processContext = ElectronProcessType.Browser;
         // Try the official Electron method
@@ -89,7 +89,7 @@ export function GetElectronProcessType(): ElectronProcessType {
         }
         else {
             if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
-                processContext = ElectronProcessType.ElectronMainNode;
+                processContext = ElectronProcessType.ElectronNode;
             }
             else {
                 processContext = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessType.ElectronNode : ElectronProcessType.Node;

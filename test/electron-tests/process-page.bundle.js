@@ -69,7 +69,7 @@ function GetElectronProcessType() {
         }
         else {
             if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
-                processContext = ElectronProcessType.ElectronMainNode;
+                processContext = ElectronProcessType.ElectronNode;
             }
             else {
                 processContext = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessType.ElectronNode : ElectronProcessType.Node;
