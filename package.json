@@ -1,6 +1,6 @@
 {
   "name": "electron-process-type",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Retrieve the process type running your code : 'node',  'browser', 'renderer' or 'webworker'.",
   "repository": {
     "type": "git",
@@ -32,21 +32,21 @@
   "browser": "./lib/electron-process-type.js",
   "types": "./lib/electron-process-type.d.ts",
   "devDependencies": {
-    "@types/node": "12.12.16",
-    "browserify": "^16.5.0",
+    "@types/node": "12.7.12",
+    "browserify": "^16.5.2",
     "chai": "^4.2.0",
     "del": "^5.1.0",
-    "del-cli": "^3.0.0",
+    "del-cli": "^3.0.1",
     "dts-bundle": "^0.7.3",
-    "electron": "^7.1.4",
-    "electron-mocha": "^8.1.2",
-    "mocha": "^6.2.2",
+    "electron": "^9.2.0",
+    "electron-mocha": "^9.1.0",
+    "mocha": "^8.1.1",
     "ncp": "^2.0.0",
-    "shelljs": "^0.8.3",
-    "sinon": "^7.5.0",
-    "tslint": "^5.20.1",
+    "shelljs": "^0.8.4",
+    "sinon": "^9.0.3",
+    "tslint": "^6.1.3",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.9.7"
   },
   "scripts": {
     "clean": "del-cli ./lib ./build ./dist",

@@ -2,7 +2,7 @@ import * as util from '../electron-process-type-util';
 
 export type ElectronProcessType = 'electron-node' | 'electron-browser' | 'electron-main-node' | 'node' | 'browser' | 'worker' | 'undefined';
 
-export { IsProcessNode, IsProcessBrowser, IsProcessElectron } from '../electron-process-type-util';
+export { IsContextNode as IsProcessNode, IsContextBrowser as IsProcessBrowser, IsProcessElectron } from '../electron-process-type-util';
 
 export function GetElectronProcessType(): ElectronProcessType {
     const electronProcessType = util.GetElectronProcessType();

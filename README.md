@@ -22,6 +22,19 @@ Dependencies
 
 
 # API
+## function IsContextNode(): boolean
+Check if you are running in a NodeJS context: pure NodeJS process, Electron NodeJS process, Electron Main NodeJS process.
+
+## function IsContextBrowser(): boolean;
+Check if you are running in a Browser (Navigator) context: pure Browser, Electron browser.
+
+## function IsContextWorker(): boolean;
+Check if you are running in a Worker.
+
+## function IsProcessElectron(): boolean;
+Check if you are running in a Electron process: Electron NodeJS process, Electron Main NodeJS process, Electron browser.
+
+
 ## v1/GetElectronProcessType(): 'undefined' | 'node' | 'browser' | 'renderer' | 'worker';
 Returns a string compatible with Electron [process.type](https://electronjs.org/docs/api/process#processversionschrome)
 

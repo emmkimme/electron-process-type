@@ -26,28 +26,24 @@ export enum ElectronProcessType {
     ElectronMainNode  = ProcessContextNode | ProcessElectronMain
 }
 
-/** @internal */
-export function IsProcessNode() {
+export function IsContextNode(): boolean {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextNode;
+    return (processContext & ProcessContextNode) === ProcessContextNode;
 }
 
-/** @internal */
-export function IsProcessBrowser() {
+export function IsContextBrowser(): boolean {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextBrowser;
+    return (processContext & ProcessContextBrowser) === ProcessContextBrowser;
 }
 
-/** @internal */
-export function IsProcessWorker() {
+export function IsContextWorker(): boolean {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextWorker;
+    return (processContext & ProcessContextWorker) === ProcessContextWorker;
 }
 
-/** @internal */
-export function IsProcessElectron() {
+export function IsProcessElectron(): boolean {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessElectron;
+    return (processContext & ProcessElectron) === ProcessElectron;
 }
 
 /** @internal */

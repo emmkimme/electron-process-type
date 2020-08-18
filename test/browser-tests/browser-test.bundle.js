@@ -2,6 +2,7 @@
 (function (process){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetElectronProcessType = exports.IsProcessElectron = exports.IsContextWorker = exports.IsContextBrowser = exports.IsContextNode = exports.ElectronProcessType = void 0;
 const isBrowser = (typeof window === 'object') && (typeof window.document === 'object');
 const isWebWorker = (typeof self === 'object') && self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope');
 const ProcessContextUndefined = 0x00000000;
@@ -20,24 +21,24 @@ var ElectronProcessType;
     ElectronProcessType[ElectronProcessType["ElectronBrowser"] = ProcessContextBrowser | ProcessElectron] = "ElectronBrowser";
     ElectronProcessType[ElectronProcessType["ElectronMainNode"] = ProcessContextNode | ProcessElectronMain] = "ElectronMainNode";
 })(ElectronProcessType = exports.ElectronProcessType || (exports.ElectronProcessType = {}));
-function IsProcessNode() {
+function IsContextNode() {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextNode;
+    return (processContext & ProcessContextNode) === ProcessContextNode;
 }
-exports.IsProcessNode = IsProcessNode;
-function IsProcessBrowser() {
+exports.IsContextNode = IsContextNode;
+function IsContextBrowser() {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextBrowser;
+    return (processContext & ProcessContextBrowser) === ProcessContextBrowser;
 }
-exports.IsProcessBrowser = IsProcessBrowser;
-function IsProcessWorker() {
+exports.IsContextBrowser = IsContextBrowser;
+function IsContextWorker() {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessContextWorker;
+    return (processContext & ProcessContextWorker) === ProcessContextWorker;
 }
-exports.IsProcessWorker = IsProcessWorker;
+exports.IsContextWorker = IsContextWorker;
 function IsProcessElectron() {
     const processContext = GetElectronProcessType();
-    return processContext & ProcessElectron;
+    return (processContext & ProcessElectron) === ProcessElectron;
 }
 exports.IsProcessElectron = IsProcessElectron;
 function GetElectronProcessType() {
@@ -83,9 +84,20 @@ exports.GetElectronProcessType = GetElectronProcessType;
 }).call(this,require('_process'))
 },{"_process":49,"electron":"electron"}],2:[function(require,module,exports){
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.v4 = exports.v3 = exports.v2 = exports.v1 = void 0;
 var v1_1 = require("./v1");
-exports.GetElectronProcessType = v1_1.GetElectronProcessType;
+Object.defineProperty(exports, "GetElectronProcessType", { enumerable: true, get: function () { return v1_1.GetElectronProcessType; } });
 const v1_2 = require("./v1");
 const v2_1 = require("./v2");
 const v3_1 = require("./v3");
@@ -106,26 +118,42 @@ var v4;
 (function (v4) {
     v4.GetElectronProcessType = v4_1.GetElectronProcessType;
 })(v4 = exports.v4 || (exports.v4 = {}));
+__exportStar(require("./electron-process-type-util"), exports);
 
-},{"./v1":4,"./v2":6,"./v3":8,"./v4":10}],3:[function(require,module,exports){
+},{"./electron-process-type-util":1,"./v1":4,"./v2":6,"./v3":8,"./v4":10}],3:[function(require,module,exports){
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./electron-process-type"));
+__exportStar(require("./electron-process-type"), exports);
 
 },{"./electron-process-type":2}],4:[function(require,module,exports){
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./v1/electron-process-type"));
+__exportStar(require("./v1/electron-process-type"), exports);
 
 },{"./v1/electron-process-type":5}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetElectronProcessType = void 0;
 const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
@@ -149,15 +177,23 @@ exports.GetElectronProcessType = GetElectronProcessType;
 
 },{"../electron-process-type-util":1}],6:[function(require,module,exports){
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./v2/electron-process-type"));
+__exportStar(require("./v2/electron-process-type"), exports);
 
 },{"./v2/electron-process-type":7}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetElectronProcessType = void 0;
 const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
@@ -181,15 +217,23 @@ exports.GetElectronProcessType = GetElectronProcessType;
 
 },{"../electron-process-type-util":1}],8:[function(require,module,exports){
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./v3/electron-process-type"));
+__exportStar(require("./v3/electron-process-type"), exports);
 
 },{"./v3/electron-process-type":9}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetElectronProcessType = void 0;
 const util = require("../electron-process-type-util");
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
@@ -213,20 +257,28 @@ exports.GetElectronProcessType = GetElectronProcessType;
 
 },{"../electron-process-type-util":1}],10:[function(require,module,exports){
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./v4/electron-process-type"));
+__exportStar(require("./v4/electron-process-type"), exports);
 
 },{"./v4/electron-process-type":11}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetElectronProcessType = void 0;
 const util = require("../electron-process-type-util");
 var electron_process_type_util_1 = require("../electron-process-type-util");
-exports.IsProcessNode = electron_process_type_util_1.IsProcessNode;
-exports.IsProcessBrowser = electron_process_type_util_1.IsProcessBrowser;
-exports.IsProcessElectron = electron_process_type_util_1.IsProcessElectron;
+Object.defineProperty(exports, "IsProcessNode", { enumerable: true, get: function () { return electron_process_type_util_1.IsContextNode; } });
+Object.defineProperty(exports, "IsProcessBrowser", { enumerable: true, get: function () { return electron_process_type_util_1.IsContextBrowser; } });
+Object.defineProperty(exports, "IsProcessElectron", { enumerable: true, get: function () { return electron_process_type_util_1.IsProcessElectron; } });
 function GetElectronProcessType() {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
