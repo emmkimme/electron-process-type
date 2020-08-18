@@ -68,6 +68,6 @@
     "test-mocha-browser": "electron-mocha --renderer test/type-browser.test.js",
     "tsc": "tsc",
     "tslint": "tslint",
-    "publication": "npm publish ./ --registry https://registry.npmjs.org/"
+    "deploy": "npm publish ./ --registry https://registry.npmjs.org/"
   }
 }
