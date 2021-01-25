@@ -7,19 +7,19 @@ export { IsContextNode as IsProcessNode, IsContextBrowser as IsProcessBrowser, I
 export function GetElectronProcessType(): ElectronProcessType {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessType.ElectronMainNode:
+        case util.ContextExecutionType.ElectronMainNode:
             return 'electron-main-node';
-        case util.ElectronProcessType.Node:
+        case util.ContextExecutionType.Node:
             return 'node';
-        case util.ElectronProcessType.ElectronNode:
+        case util.ContextExecutionType.ElectronNode:
             return 'electron-node';
-        case util.ElectronProcessType.Browser:
+        case util.ContextExecutionType.Browser:
             return 'browser';
-        case util.ElectronProcessType.ElectronBrowser:
+        case util.ContextExecutionType.ElectronBrowser:
             return 'electron-browser';
-        case util.ElectronProcessType.Worker:
+        case util.ContextExecutionType.Worker:
             return 'worker';
-        case util.ElectronProcessType.Undefined:
+        case util.ContextExecutionType.Undefined:
         default:
             return 'undefined';
     }

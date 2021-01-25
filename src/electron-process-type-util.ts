@@ -1,96 +1,120 @@
 /// <reference types='electron'/>
+
+import { runInThisContext } from "vm";
+
 // Needed for having process.type property
 
 // Helpers
-const isBrowser = (typeof window === 'object') && (typeof window.document === 'object');
-const isWebWorker = (typeof self === 'object') && self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope');
+const isBrowser = (typeof window === 'object')
+&& (typeof navigator === 'object')
+&& (typeof document === 'object')
 
-// Types of context
+const isWebWorker = (typeof self === 'object')
+&& (typeof self.importScripts === 'function')
+&& (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
+
 const ProcessContextUndefined = 0x00000000;
-const ProcessContextNode      = 0x00000001;
-const ProcessContextBrowser   = 0x00000010;
-const ProcessContextWorker    = 0x00100000;
 
-// Types of process
-const ProcessElectron        = 0x00010000;
-const ProcessElectronMain    = 0x00030000;
+// Types of Api
+const NodeContext      = 0x00000001;
+const BrowserContext   = 0x00000010;
+const WorkerContext    = 0x00000100;
+const ElectronContext  = 0x00001000;
+
+// Types of runtime
+const NodeRuntime     = 0x00010000;
+const BrowserRuntime  = 0x00100000;
+const ElectronRuntime = 0x01000000;
 
 /** @internal */
-export enum ElectronProcessType {
+export enum ContextExecutionType {
     Undefined         = ProcessContextUndefined,
-    Node              = ProcessContextNode,
-    Browser           = ProcessContextBrowser,
-    Worker            = ProcessContextWorker,
-    ElectronNode      = ProcessContextNode | ProcessElectron,
-    ElectronBrowser   = ProcessContextBrowser | ProcessElectron,
-    ElectronMainNode  = ProcessContextNode | ProcessElectronMain
+    Node              = NodeContext | NodeRuntime,
+    Browser           = BrowserContext | BrowserRuntime,
+    WebWorker         = WorkerContext | BrowserRuntime,
+    WorkerThread      = WorkerContext | NodeRuntime,
+    ElectronThread    = WorkerContext | ElectronRuntime,
+    ElectronNode      = NodeContext | ElectronRuntime,
+    ElectronBrowser   = BrowserContext | ElectronRuntime,
+    ElectronMainNode  = NodeContext | ElectronContext | ElectronRuntime
 }
 
 export function IsContextNode(): boolean {
     const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextNode) === ProcessContextNode;
+    return (processContext & NodeContext) === NodeContext;
 }
 
 export function IsContextBrowser(): boolean {
     const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextBrowser) === ProcessContextBrowser;
+    return (processContext & BrowserContext) === BrowserContext;
 }
 
 export function IsContextWorker(): boolean {
     const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextWorker) === ProcessContextWorker;
+    return (processContext & WorkerContext) === WorkerContext;
 }
 
 export function IsProcessElectron(): boolean {
     const processContext = GetElectronProcessType();
-    return (processContext & ProcessElectron) === ProcessElectron;
+    return (processContext & ElectronRuntime) === ElectronRuntime;
 }
 
 /** @internal */
-export function GetElectronProcessType(): ElectronProcessType {
+export function GetElectronProcessType(): ContextExecutionType {
     // By default
-    let processContext = ElectronProcessType.Undefined;
+    let contextExecutionType = ContextExecutionType.Undefined;
     // Use what it seems the most relevant method for detecting if we are in a browser
     if (isBrowser) {
-        processContext = ElectronProcessType.Browser;
+        let runtimeType = BrowserRuntime;
         // Try the official Electron method
         if ((typeof process ==='object') && (process.type === 'renderer')) {
-            processContext = ElectronProcessType.ElectronBrowser;
+            runtimeType = ElectronRuntime;
         }
         // 'process.type' may be null
         // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox, webPreferences.sandbox = true)
         // - in a renderer process with nodeIntegration=false
         // - in a renderer process preload with sandbox=true
         else if ((typeof navigator === 'object') && (typeof navigator.appVersion === 'string') && (navigator.appVersion.indexOf(' Electron/') >= 0)) {
-            processContext = ElectronProcessType.ElectronBrowser;
+            runtimeType = ElectronRuntime;
+        }
+        else {
             try {
                 // Would work in a preload
                 const electron = require('electron');
                 if (electron.ipcRenderer) {
-                    processContext = ElectronProcessType.ElectronBrowser;
+                    runtimeType = ElectronRuntime;
                 }
             }
             catch (err) {
             }
         }
-    }
-    else if (isWebWorker) {
-        processContext = ElectronProcessType.Worker;
-    }
-    else if (typeof process ==='object') {
-        processContext = ElectronProcessType.Node;
-        // Try the official Electron method
-        if (process.type === 'browser') {
-            processContext = ElectronProcessType.ElectronMainNode;
+        if (isWebWorker) {
+            contextExecutionType = WorkerContext | runtimeType;
         }
         else {
+            contextExecutionType = BrowserContext | runtimeType;
+        }
+    }
+    else if (typeof process ==='object') {
+        // Try the official Electron method
+        if (process.type === 'browser') {
+            contextExecutionType = NodeContext | ElectronContext | ElectronRuntime;
+        }
+        else {
+            let runtimeType = NodeRuntime;
             if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
-                processContext = ElectronProcessType.ElectronNode;
+                runtimeType = ElectronRuntime;
+            }
+            else if (process.env['ELECTRON_RUN_AS_NODE']) {
+                runtimeType = ElectronRuntime;
+            }
+            if (isWebWorker) {
+                contextExecutionType = WorkerContext | runtimeType;
             }
             else {
-                processContext = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessType.ElectronNode : ElectronProcessType.Node;
+                contextExecutionType = NodeContext | runtimeType;
             }
         }
     }
-    return processContext;
+    return contextExecutionType;
 }

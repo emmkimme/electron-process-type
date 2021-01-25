@@ -1,10 +1,17 @@
 {
     "compilerOptions": {
-        "typeRoots" : ["./src/typings"],
 		"module": "commonjs",
 		"moduleResolution": "node",
-//        "lib": ["dom", "es2015.promise", "es5"],
-		"target": "es6",        
+        "lib": [
+            "es6",
+            "dom",
+            "dom.iterable",
+            "webworker",
+            "webworker.importscripts"
+        ],
+        "skipLibCheck": true,
+        "target": "es6",
+        
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,

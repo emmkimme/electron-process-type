@@ -1,21 +1,25 @@
 # electron-process-type
+This is a simple helper which returns the process running your code and API available :
+
+Runtime/Api | Node | Browser | Electron
+----------- |:----:|:-------:|:--------:|
+Node        | X |   | X |
+Browser     |   | X |   |
+Worker      | X | X | X |
+Electron    |   |   | X |
+
+
 This API works in any kind of processes (not only Electron): Electron, Node, Browser, ...
 
-The Electron process.type has some limitations.
-It does not work in following context :
+The Electron API [process.type](https://electronjs.org/docs/api/process#processversionschrome) has some limitations.
+It does not work properly in following contexts :
 * in a node process
 * in a renderer when Chromium is in sandbox (--enable-sandbox=true)
 * in a renderer when Renderer is in sandbox=true
 * in a renderer when nodeIntegration=false
 * in preload file of a renderer
 
-This is a simple helper which returns the process type hosting your code whatever the context :
-- 'node' / 'electron-node' (NodeJS API but No Electron API available)
-- 'browser' / 'main' / 'electron-main-node' (NodeJS and Electron APIs available)
-- 'renderer' / 'browser' / 'electron-browser' (Browser API)
-- 'worker'
 
-There are different versions which use either Electron semantic (renderer, main) or Browser semantic (browser, electron-main-node).
 
 Dependencies
 * http://nodejs.org/
@@ -70,7 +74,7 @@ export function CreateEnvironment(): Environment {
 ```
 
 ## v2/GetElectronProcessType(): 'undefined' | 'node' | 'main' | 'renderer' | 'worker';
-The process.type *'browser'* introduces a lot of confusions as the notion of 'browser' process is more considered as a 'renderer' process : browserify, index-browser, [Browser or Node](https://github.com/flexdinesh/browser-or-node), ...  
+The process.type *'browser'* introduces a lot of confusions as the notion of 'browser' process is more considered as a 'renderer' process. Same notion uses bu browserify, index-browser, [Browser or Node](https://github.com/flexdinesh/browser-or-node), ...  
 As Electron documentation, we use the term of 'main' rather than 'browser'. We keep 'renderer'.
 
 ```ts

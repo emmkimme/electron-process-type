@@ -5,17 +5,17 @@ export type ElectronProcessType = 'node' | 'renderer' | 'main' | 'worker' | 'und
 export function GetElectronProcessType(): ElectronProcessType {
     const electronProcessType = util.GetElectronProcessType();
     switch (electronProcessType) {
-        case util.ElectronProcessType.ElectronMainNode:
+        case util.ContextExecutionType.ElectronMainNode:
             return 'main';
-        case util.ElectronProcessType.Node:
-        case util.ElectronProcessType.ElectronNode:
+        case util.ContextExecutionType.Node:
+        case util.ContextExecutionType.ElectronNode:
             return 'node';
-        case util.ElectronProcessType.Browser:
-        case util.ElectronProcessType.ElectronBrowser:
+        case util.ContextExecutionType.Browser:
+        case util.ContextExecutionType.ElectronBrowser:
             return 'renderer';
-        case util.ElectronProcessType.Worker:
+        case util.ContextExecutionType.Worker:
             return 'worker';
-        case util.ElectronProcessType.Undefined:
+        case util.ContextExecutionType.Undefined:
         default:
             return 'undefined';
     }
