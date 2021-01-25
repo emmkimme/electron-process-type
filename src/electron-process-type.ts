@@ -30,4 +30,4 @@ export namespace v4 {
     export const GetElectronProcessType: () => ElectronProcessTypeV4 = GetElectronProcessTypeV4;
 }
 
-export * from './electron-process-type-util';
+export * from './execution-context';

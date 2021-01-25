@@ -1,25 +1,26 @@
-import * as util from '../electron-process-type-util';
+import * as util from '../execution-context';
 
 export type ElectronProcessType = 'electron-node' | 'electron-browser' | 'electron-main-node' | 'node' | 'browser' | 'worker' | 'undefined';
 
-export { IsContextNode as IsProcessNode, IsContextBrowser as IsProcessBrowser, IsProcessElectron } from '../electron-process-type-util';
+export { IsContextNode as IsProcessNode, IsContextBrowser as IsProcessBrowser, IsProcessElectron } from '../execution-context';
 
 export function GetElectronProcessType(): ElectronProcessType {
-    const electronProcessType = util.GetElectronProcessType();
+    const electronProcessType = util.GetExecutionContext();
     switch (electronProcessType) {
-        case util.ContextExecutionType.ElectronMainNode:
+        case util.ExecutionContext.ElectronMainNode:
             return 'electron-main-node';
-        case util.ContextExecutionType.Node:
+        case util.ExecutionContext.Node:
             return 'node';
-        case util.ContextExecutionType.ElectronNode:
+        case util.ExecutionContext.ElectronNode:
             return 'electron-node';
-        case util.ContextExecutionType.Browser:
+        case util.ExecutionContext.Browser:
             return 'browser';
-        case util.ContextExecutionType.ElectronBrowser:
+        case util.ExecutionContext.ElectronBrowser:
             return 'electron-browser';
-        case util.ContextExecutionType.Worker:
+        case util.ExecutionContext.WebWorker:
+        case util.ExecutionContext.WorkerThread:
             return 'worker';
-        case util.ContextExecutionType.Undefined:
+        case util.ExecutionContext.Undefined:
         default:
             return 'undefined';
     }

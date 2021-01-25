@@ -1,7 +1,5 @@
 /// <reference types='electron'/>
 
-import { runInThisContext } from "vm";
-
 // Needed for having process.type property
 
 // Helpers
@@ -16,18 +14,18 @@ const isWebWorker = (typeof self === 'object')
 const ProcessContextUndefined = 0x00000000;
 
 // Types of Api
-const NodeContext      = 0x00000001;
-const BrowserContext   = 0x00000010;
-const WorkerContext    = 0x00000100;
-const ElectronContext  = 0x00001000;
+export const NodeContext      = 0x00000001;
+export const BrowserContext   = 0x00000010;
+export const WorkerContext    = 0x00000100;
+export const ElectronContext  = 0x00001000;
 
 // Types of runtime
-const NodeRuntime     = 0x00010000;
-const BrowserRuntime  = 0x00100000;
-const ElectronRuntime = 0x01000000;
+export const NodeRuntime     = 0x00010000;
+export const BrowserRuntime  = 0x00100000;
+export const ElectronRuntime = 0x01000000;
 
 /** @internal */
-export enum ContextExecutionType {
+export enum ExecutionContext {
     Undefined         = ProcessContextUndefined,
     Node              = NodeContext | NodeRuntime,
     Browser           = BrowserContext | BrowserRuntime,
@@ -40,29 +38,29 @@ export enum ContextExecutionType {
 }
 
 export function IsContextNode(): boolean {
-    const processContext = GetElectronProcessType();
+    const processContext = GetExecutionContext();
     return (processContext & NodeContext) === NodeContext;
 }
 
 export function IsContextBrowser(): boolean {
-    const processContext = GetElectronProcessType();
+    const processContext = GetExecutionContext();
     return (processContext & BrowserContext) === BrowserContext;
 }
 
 export function IsContextWorker(): boolean {
-    const processContext = GetElectronProcessType();
+    const processContext = GetExecutionContext();
     return (processContext & WorkerContext) === WorkerContext;
 }
 
 export function IsProcessElectron(): boolean {
-    const processContext = GetElectronProcessType();
+    const processContext = GetExecutionContext();
     return (processContext & ElectronRuntime) === ElectronRuntime;
 }
 
 /** @internal */
-export function GetElectronProcessType(): ContextExecutionType {
+export function GetExecutionContext(): ExecutionContext {
     // By default
-    let contextExecutionType = ContextExecutionType.Undefined;
+    let contextExecutionType = ExecutionContext.Undefined;
     // Use what it seems the most relevant method for detecting if we are in a browser
     if (isBrowser) {
         let runtimeType = BrowserRuntime;

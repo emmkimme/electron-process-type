@@ -20,7 +20,11 @@ const electronProcessTypeV3 = electronProcessTypeModuleV3.GetElectronProcessType
 const electronProcessTypeModuleV4 = require('../../lib/v4');
 const electronProcessTypeV4 = electronProcessTypeModuleV4.GetElectronProcessType()
 
+const eptModule = require('../../lib');
+const executionContext = eptModule.GetExecutionContext()
+
 console.log(`GetElectronProcessType(v1)=${electronProcessTypeV1}`);
 console.log(`GetElectronProcessType(v2)=${electronProcessTypeV2}`);
 console.log(`GetElectronProcessType(v3)=${electronProcessTypeV3}`);
 console.log(`GetElectronProcessType(v4)=${electronProcessTypeV4}`);
+console.log(`GetExecutionContext=${executionContext}`);

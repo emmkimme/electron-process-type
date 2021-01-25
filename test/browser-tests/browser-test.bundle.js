@@ -1,92 +1,4 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function (process){(function (){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetElectronProcessType = exports.IsProcessElectron = exports.IsContextWorker = exports.IsContextBrowser = exports.IsContextNode = exports.ElectronProcessType = void 0;
-const isBrowser = (typeof window === 'object')
-    && (typeof document === 'object')
-    && (typeof navigator === 'object');
-const isWebWorker = (typeof self === 'object')
-    && (typeof self.importScripts === 'function')
-    && (self.constructor && ((self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope')));
-const ProcessContextUndefined = 0x00000000;
-const ProcessContextNode = 0x00000001;
-const ProcessContextBrowser = 0x00000010;
-const ProcessContextWorker = 0x00100000;
-const ProcessElectron = 0x00010000;
-const ProcessElectronMain = 0x00030000;
-var ElectronProcessType;
-(function (ElectronProcessType) {
-    ElectronProcessType[ElectronProcessType["Undefined"] = ProcessContextUndefined] = "Undefined";
-    ElectronProcessType[ElectronProcessType["Node"] = ProcessContextNode] = "Node";
-    ElectronProcessType[ElectronProcessType["Browser"] = ProcessContextBrowser] = "Browser";
-    ElectronProcessType[ElectronProcessType["Worker"] = ProcessContextWorker] = "Worker";
-    ElectronProcessType[ElectronProcessType["ElectronNode"] = ProcessContextNode | ProcessElectron] = "ElectronNode";
-    ElectronProcessType[ElectronProcessType["ElectronBrowser"] = ProcessContextBrowser | ProcessElectron] = "ElectronBrowser";
-    ElectronProcessType[ElectronProcessType["ElectronMainNode"] = ProcessContextNode | ProcessElectronMain] = "ElectronMainNode";
-})(ElectronProcessType = exports.ElectronProcessType || (exports.ElectronProcessType = {}));
-function IsContextNode() {
-    const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextNode) === ProcessContextNode;
-}
-exports.IsContextNode = IsContextNode;
-function IsContextBrowser() {
-    const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextBrowser) === ProcessContextBrowser;
-}
-exports.IsContextBrowser = IsContextBrowser;
-function IsContextWorker() {
-    const processContext = GetElectronProcessType();
-    return (processContext & ProcessContextWorker) === ProcessContextWorker;
-}
-exports.IsContextWorker = IsContextWorker;
-function IsProcessElectron() {
-    const processContext = GetElectronProcessType();
-    return (processContext & ProcessElectron) === ProcessElectron;
-}
-exports.IsProcessElectron = IsProcessElectron;
-function GetElectronProcessType() {
-    let processContext = ElectronProcessType.Undefined;
-    if (isBrowser) {
-        processContext = ElectronProcessType.Browser;
-        if ((typeof process === 'object') && (process.type === 'renderer')) {
-            processContext = ElectronProcessType.ElectronBrowser;
-        }
-        else if ((typeof navigator === 'object') && (typeof navigator.appVersion === 'string') && (navigator.appVersion.indexOf(' Electron/') >= 0)) {
-            processContext = ElectronProcessType.ElectronBrowser;
-            try {
-                const electron = require('electron');
-                if (electron.ipcRenderer) {
-                    processContext = ElectronProcessType.ElectronBrowser;
-                }
-            }
-            catch (err) {
-            }
-        }
-    }
-    else if (isWebWorker) {
-        processContext = ElectronProcessType.Worker;
-    }
-    else if (typeof process === 'object') {
-        processContext = ElectronProcessType.Node;
-        if (process.type === 'browser') {
-            processContext = ElectronProcessType.ElectronMainNode;
-        }
-        else {
-            if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
-                processContext = ElectronProcessType.ElectronNode;
-            }
-            else {
-                processContext = process.env['ELECTRON_RUN_AS_NODE'] ? ElectronProcessType.ElectronNode : ElectronProcessType.Node;
-            }
-        }
-    }
-    return processContext;
-}
-exports.GetElectronProcessType = GetElectronProcessType;
-
-}).call(this)}).call(this,require('_process'))
-},{"_process":49,"electron":"electron"}],2:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -122,9 +34,112 @@ var v4;
 (function (v4) {
     v4.GetElectronProcessType = v4_1.GetElectronProcessType;
 })(v4 = exports.v4 || (exports.v4 = {}));
-__exportStar(require("./electron-process-type-util"), exports);
+__exportStar(require("./execution-context"), exports);
 
-},{"./electron-process-type-util":1,"./v1":4,"./v2":6,"./v3":8,"./v4":10}],3:[function(require,module,exports){
+},{"./execution-context":2,"./v1":4,"./v2":6,"./v3":8,"./v4":10}],2:[function(require,module,exports){
+(function (process){(function (){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetExecutionContext = exports.IsProcessElectron = exports.IsContextWorker = exports.IsContextBrowser = exports.IsContextNode = exports.ExecutionContext = exports.ElectronRuntime = exports.BrowserRuntime = exports.NodeRuntime = exports.ElectronContext = exports.WorkerContext = exports.BrowserContext = exports.NodeContext = void 0;
+const isBrowser = (typeof window === 'object')
+    && (typeof navigator === 'object')
+    && (typeof document === 'object');
+const isWebWorker = (typeof self === 'object')
+    && (typeof self.importScripts === 'function')
+    && (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
+const ProcessContextUndefined = 0x00000000;
+exports.NodeContext = 0x00000001;
+exports.BrowserContext = 0x00000010;
+exports.WorkerContext = 0x00000100;
+exports.ElectronContext = 0x00001000;
+exports.NodeRuntime = 0x00010000;
+exports.BrowserRuntime = 0x00100000;
+exports.ElectronRuntime = 0x01000000;
+var ExecutionContext;
+(function (ExecutionContext) {
+    ExecutionContext[ExecutionContext["Undefined"] = ProcessContextUndefined] = "Undefined";
+    ExecutionContext[ExecutionContext["Node"] = exports.NodeContext | exports.NodeRuntime] = "Node";
+    ExecutionContext[ExecutionContext["Browser"] = exports.BrowserContext | exports.BrowserRuntime] = "Browser";
+    ExecutionContext[ExecutionContext["WebWorker"] = exports.WorkerContext | exports.BrowserRuntime] = "WebWorker";
+    ExecutionContext[ExecutionContext["WorkerThread"] = exports.WorkerContext | exports.NodeRuntime] = "WorkerThread";
+    ExecutionContext[ExecutionContext["ElectronThread"] = exports.WorkerContext | exports.ElectronRuntime] = "ElectronThread";
+    ExecutionContext[ExecutionContext["ElectronNode"] = exports.NodeContext | exports.ElectronRuntime] = "ElectronNode";
+    ExecutionContext[ExecutionContext["ElectronBrowser"] = exports.BrowserContext | exports.ElectronRuntime] = "ElectronBrowser";
+    ExecutionContext[ExecutionContext["ElectronMainNode"] = exports.NodeContext | exports.ElectronContext | exports.ElectronRuntime] = "ElectronMainNode";
+})(ExecutionContext = exports.ExecutionContext || (exports.ExecutionContext = {}));
+function IsContextNode() {
+    const processContext = GetExecutionContext();
+    return (processContext & exports.NodeContext) === exports.NodeContext;
+}
+exports.IsContextNode = IsContextNode;
+function IsContextBrowser() {
+    const processContext = GetExecutionContext();
+    return (processContext & exports.BrowserContext) === exports.BrowserContext;
+}
+exports.IsContextBrowser = IsContextBrowser;
+function IsContextWorker() {
+    const processContext = GetExecutionContext();
+    return (processContext & exports.WorkerContext) === exports.WorkerContext;
+}
+exports.IsContextWorker = IsContextWorker;
+function IsProcessElectron() {
+    const processContext = GetExecutionContext();
+    return (processContext & exports.ElectronRuntime) === exports.ElectronRuntime;
+}
+exports.IsProcessElectron = IsProcessElectron;
+function GetExecutionContext() {
+    let contextExecutionType = ExecutionContext.Undefined;
+    if (isBrowser) {
+        let runtimeType = exports.BrowserRuntime;
+        if ((typeof process === 'object') && (process.type === 'renderer')) {
+            runtimeType = exports.ElectronRuntime;
+        }
+        else if ((typeof navigator === 'object') && (typeof navigator.appVersion === 'string') && (navigator.appVersion.indexOf(' Electron/') >= 0)) {
+            runtimeType = exports.ElectronRuntime;
+        }
+        else {
+            try {
+                const electron = require('electron');
+                if (electron.ipcRenderer) {
+                    runtimeType = exports.ElectronRuntime;
+                }
+            }
+            catch (err) {
+            }
+        }
+        if (isWebWorker) {
+            contextExecutionType = exports.WorkerContext | runtimeType;
+        }
+        else {
+            contextExecutionType = exports.BrowserContext | runtimeType;
+        }
+    }
+    else if (typeof process === 'object') {
+        if (process.type === 'browser') {
+            contextExecutionType = exports.NodeContext | exports.ElectronContext | exports.ElectronRuntime;
+        }
+        else {
+            let runtimeType = exports.NodeRuntime;
+            if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
+                runtimeType = exports.ElectronRuntime;
+            }
+            else if (process.env['ELECTRON_RUN_AS_NODE']) {
+                runtimeType = exports.ElectronRuntime;
+            }
+            if (isWebWorker) {
+                contextExecutionType = exports.WorkerContext | runtimeType;
+            }
+            else {
+                contextExecutionType = exports.NodeContext | runtimeType;
+            }
+        }
+    }
+    return contextExecutionType;
+}
+exports.GetExecutionContext = GetExecutionContext;
+
+}).call(this)}).call(this,require('_process'))
+},{"_process":49,"electron":"electron"}],3:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -138,8 +153,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./electron-process-type"), exports);
+__exportStar(require("./execution-context"), exports);
 
-},{"./electron-process-type":2}],4:[function(require,module,exports){
+},{"./electron-process-type":1,"./execution-context":2}],4:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -158,9 +174,9 @@ __exportStar(require("./v1/electron-process-type"), exports);
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetElectronProcessType = void 0;
-const util = require("../electron-process-type-util");
+const util = require("../execution-context");
 function GetElectronProcessType() {
-    const electronProcessType = util.GetElectronProcessType();
+    const electronProcessType = util.GetExecutionContext();
     switch (electronProcessType) {
         case util.ExecutionContext.ElectronMainNode:
             return 'browser';
@@ -170,7 +186,8 @@ function GetElectronProcessType() {
         case util.ExecutionContext.Browser:
         case util.ExecutionContext.ElectronBrowser:
             return 'renderer';
-        case util.ExecutionContext.Worker:
+        case util.ExecutionContext.WebWorker:
+        case util.ExecutionContext.WorkerThread:
             return 'worker';
         case util.ExecutionContext.Undefined:
         default:
@@ -179,7 +196,7 @@ function GetElectronProcessType() {
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
-},{"../electron-process-type-util":1}],6:[function(require,module,exports){
+},{"../execution-context":2}],6:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -198,9 +215,9 @@ __exportStar(require("./v2/electron-process-type"), exports);
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetElectronProcessType = void 0;
-const util = require("../electron-process-type-util");
+const util = require("../execution-context");
 function GetElectronProcessType() {
-    const electronProcessType = util.GetElectronProcessType();
+    const electronProcessType = util.GetExecutionContext();
     switch (electronProcessType) {
         case util.ExecutionContext.ElectronMainNode:
             return 'main';
@@ -210,7 +227,8 @@ function GetElectronProcessType() {
         case util.ExecutionContext.Browser:
         case util.ExecutionContext.ElectronBrowser:
             return 'renderer';
-        case util.ExecutionContext.Worker:
+        case util.ExecutionContext.WebWorker:
+        case util.ExecutionContext.WorkerThread:
             return 'worker';
         case util.ExecutionContext.Undefined:
         default:
@@ -219,7 +237,7 @@ function GetElectronProcessType() {
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
-},{"../electron-process-type-util":1}],8:[function(require,module,exports){
+},{"../execution-context":2}],8:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -238,9 +256,9 @@ __exportStar(require("./v3/electron-process-type"), exports);
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetElectronProcessType = void 0;
-const util = require("../electron-process-type-util");
+const util = require("../execution-context");
 function GetElectronProcessType() {
-    const electronProcessType = util.GetElectronProcessType();
+    const electronProcessType = util.GetExecutionContext();
     switch (electronProcessType) {
         case util.ExecutionContext.ElectronMainNode:
             return 'main';
@@ -250,7 +268,8 @@ function GetElectronProcessType() {
         case util.ExecutionContext.Browser:
         case util.ExecutionContext.ElectronBrowser:
             return 'browser';
-        case util.ExecutionContext.Worker:
+        case util.ExecutionContext.WebWorker:
+        case util.ExecutionContext.WorkerThread:
             return 'worker';
         case util.ExecutionContext.Undefined:
         default:
@@ -259,7 +278,7 @@ function GetElectronProcessType() {
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
-},{"../electron-process-type-util":1}],10:[function(require,module,exports){
+},{"../execution-context":2}],10:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -278,13 +297,13 @@ __exportStar(require("./v4/electron-process-type"), exports);
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetElectronProcessType = exports.IsProcessElectron = exports.IsProcessBrowser = exports.IsProcessNode = void 0;
-const util = require("../electron-process-type-util");
-var electron_process_type_util_1 = require("../electron-process-type-util");
-Object.defineProperty(exports, "IsProcessNode", { enumerable: true, get: function () { return electron_process_type_util_1.IsContextNode; } });
-Object.defineProperty(exports, "IsProcessBrowser", { enumerable: true, get: function () { return electron_process_type_util_1.IsContextBrowser; } });
-Object.defineProperty(exports, "IsProcessElectron", { enumerable: true, get: function () { return electron_process_type_util_1.IsProcessElectron; } });
+const util = require("../execution-context");
+var execution_context_1 = require("../execution-context");
+Object.defineProperty(exports, "IsProcessNode", { enumerable: true, get: function () { return execution_context_1.IsContextNode; } });
+Object.defineProperty(exports, "IsProcessBrowser", { enumerable: true, get: function () { return execution_context_1.IsContextBrowser; } });
+Object.defineProperty(exports, "IsProcessElectron", { enumerable: true, get: function () { return execution_context_1.IsProcessElectron; } });
 function GetElectronProcessType() {
-    const electronProcessType = util.GetElectronProcessType();
+    const electronProcessType = util.GetExecutionContext();
     switch (electronProcessType) {
         case util.ExecutionContext.ElectronMainNode:
             return 'electron-main-node';
@@ -296,7 +315,8 @@ function GetElectronProcessType() {
             return 'browser';
         case util.ExecutionContext.ElectronBrowser:
             return 'electron-browser';
-        case util.ExecutionContext.Worker:
+        case util.ExecutionContext.WebWorker:
+        case util.ExecutionContext.WorkerThread:
             return 'worker';
         case util.ExecutionContext.Undefined:
         default:
@@ -305,7 +325,7 @@ function GetElectronProcessType() {
 }
 exports.GetElectronProcessType = GetElectronProcessType;
 
-},{"../electron-process-type-util":1}],12:[function(require,module,exports){
+},{"../execution-context":2}],12:[function(require,module,exports){
 /*!
  * assertion-error
  * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
@@ -11346,38 +11366,110 @@ return typeDetect;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],51:[function(require,module,exports){
+const genericTest = require('../generic-test').genericTest;
+
+genericTest('GetElectronProcessType in renderer process', [
+  'renderer',
+  'renderer',
+  'renderer',
+  'browser',
+  'browser'
+]);
+
+
+},{"../generic-test":52}],52:[function(require,module,exports){
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
 
-describe('GetElectronProcessType in renderer process', function () {
+function Title(context) {
+  let title = context.test.title;
+  let root = context.test.parent;
+  while (root) {
+    const txt = root.title;
+    if (txt) {
+      title = `${txt} - ${title}`;
+    }
+    root = root.parent;
+  }
+  return title;
+}
 
-  it(`v1`, function () {
-    const electronProcessTypeModule = require('../../lib');
-    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
+const eptModule = require('../lib');
+function convertEC2String(ec) {
+  let result = [];
+  if (ec & eptModule.NodeContext) {
+    result.push('NodeContext');
+  }
+  if (ec & eptModule.BrowserContext) {
+    result.push('BrowserContext');
+  }
+  if (ec & eptModule.ElectronContext) {
+    result.push('ElectronContext');
+  }
+  if (ec & eptModule.WorkerContext) {
+    result.push('WorkerContext');
+  }
+  if (ec & eptModule.BrowserRuntime) {
+    result.push('BrowserRuntime');
+  }
+  if (ec & eptModule.NodeRuntime) {
+    result.push('NodeRuntime');
+  }
+  if (ec & eptModule.ElectronRuntime) {
+    result.push('ElectronRuntime');
+  }
+  return result.join(',');
+}
+
+function genericTest(name, expectedResuls) {
+
+  describe(name, () => {
+    it(`v1`, function () {
+      const electronProcessTypeModule = require('../lib');
+      const result = electronProcessTypeModule.GetElectronProcessType();
+      console.info(`${Title(this)} = ${result}`);
+      expect(result).to.equal(expectedResuls[0]);
+    });
+
+    it(`v2 - 1`, function () {
+      const electronProcessTypeModule = require('../lib');
+      const result = electronProcessTypeModule.v2.GetElectronProcessType();
+      console.info(`${Title(this)} = ${result}`);
+      expect(result).to.equal(expectedResuls[1]);
+    });
+    it(`v2 - 2`, function () {
+      const electronProcessTypeModule = require('../lib/v2');
+      const result = electronProcessTypeModule.GetElectronProcessType();
+      console.info(`${Title(this)} = ${result}`);
+      expect(result).to.equal(expectedResuls[2]);
+    });
+
+    it(`v3`, function () {
+      const electronProcessTypeModule = require('../lib');
+      const result = electronProcessTypeModule.v3.GetElectronProcessType();
+      console.info(`${Title(this)} = ${result}`);
+      expect(result).to.equal(expectedResuls[3]);
+    });
+
+    it(`v4`, function () {
+      const electronProcessTypeModule = require('../lib');
+      const result = electronProcessTypeModule.v4.GetElectronProcessType();
+      console.info(`${Title(this)} = ${result}`);
+      expect(result).to.equal(expectedResuls[4]);
+    });
+
+    it(`ExecutionContext`, function () {
+      const electronProcessTypeModule = require('../lib');
+      const result = electronProcessTypeModule.GetExecutionContext();
+      console.info(`${Title(this)} = ${convertEC2String(result)}`);
+      // expect(electronProcessTypeModule.GetExecutionContext()).to.equal('node');
+    });
   });
-
-  it(`v2 - 1`, function () {
-    const electronProcessTypeModule = require('../../lib');
-    expect(electronProcessTypeModule.v2.GetElectronProcessType()).to.equal('renderer');
-  });
-  it(`v2 - 2`, function () {
-    const electronProcessTypeModule = require('../../lib/v2');
-    expect(electronProcessTypeModule.GetElectronProcessType()).to.equal('renderer');
-  });
-
-  it(`v3`, function () {
-    const electronProcessTypeModule = require('../../lib');
-    expect(electronProcessTypeModule.v3.GetElectronProcessType()).to.equal('browser');
-  });
-
-  it(`v4`, function () {
-    const electronProcessTypeModule = require('../../lib');
-    expect(electronProcessTypeModule.v4.GetElectronProcessType()).to.equal('browser');
-  });
-});
+}
 
 
+exports.genericTest = genericTest;
 
 
-},{"../../lib":3,"../../lib/v2":6,"chai":13}]},{},[51]);
+},{"../lib":3,"../lib/v2":6,"chai":13}]},{},[51]);
