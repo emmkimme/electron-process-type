@@ -11,45 +11,42 @@ const isWebWorker = (typeof self === 'object')
 && (typeof self.importScripts === 'function')
 && (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
 
-const ProcessContextUndefined = 0x00000000;
-
-// Types of Api
-export const NodeContext      = 0x00000001;
-export const BrowserContext   = 0x00000010;
-export const WorkerContext    = 0x00000100;
-export const ElectronContext  = 0x00001000;
+// Types of environment
+export const NodeEnv      = 0x00000001;
+export const BrowserEnv   = 0x00000010;
+export const WorkerEnv    = 0x00000100;
+export const ElectronEnv  = 0x00001000;
 
 // Types of runtime
 export const NodeRuntime     = 0x00010000;
 export const BrowserRuntime  = 0x00100000;
 export const ElectronRuntime = 0x01000000;
 
-/** @internal */
 export enum ExecutionContext {
-    Undefined         = ProcessContextUndefined,
-    Node              = NodeContext | NodeRuntime,
-    Browser           = BrowserContext | BrowserRuntime,
-    WebWorker         = WorkerContext | BrowserRuntime,
-    WorkerThread      = WorkerContext | NodeRuntime,
-    ElectronThread    = WorkerContext | ElectronRuntime,
-    ElectronNode      = NodeContext | ElectronRuntime,
-    ElectronBrowser   = BrowserContext | ElectronRuntime,
-    ElectronMainNode  = NodeContext | ElectronContext | ElectronRuntime
+    Undefined         = 0,
+    Node              = NodeEnv | NodeRuntime,
+    Browser           = BrowserEnv | BrowserRuntime,
+    WebWorker         = WorkerEnv | BrowserRuntime,
+    WorkerThread      = WorkerEnv | NodeRuntime,
+    ElectronThread    = WorkerEnv | ElectronRuntime,
+    ElectronNode      = NodeEnv | ElectronRuntime,
+    ElectronBrowser   = BrowserEnv | ElectronRuntime,
+    ElectronMainNode  = NodeEnv | ElectronEnv | ElectronRuntime
 }
 
 export function IsContextNode(): boolean {
     const processContext = GetExecutionContext();
-    return (processContext & NodeContext) === NodeContext;
+    return (processContext & NodeEnv) === NodeEnv;
 }
 
 export function IsContextBrowser(): boolean {
     const processContext = GetExecutionContext();
-    return (processContext & BrowserContext) === BrowserContext;
+    return (processContext & BrowserEnv) === BrowserEnv;
 }
 
 export function IsContextWorker(): boolean {
     const processContext = GetExecutionContext();
-    return (processContext & WorkerContext) === WorkerContext;
+    return (processContext & WorkerEnv) === WorkerEnv;
 }
 
 export function IsProcessElectron(): boolean {
@@ -87,16 +84,16 @@ export function GetExecutionContext(): ExecutionContext {
             }
         }
         if (isWebWorker) {
-            contextExecutionType = WorkerContext | runtimeType;
+            contextExecutionType = WorkerEnv | runtimeType;
         }
         else {
-            contextExecutionType = BrowserContext | runtimeType;
+            contextExecutionType = BrowserEnv | runtimeType;
         }
     }
     else if (typeof process ==='object') {
         // Try the official Electron method
         if (process.type === 'browser') {
-            contextExecutionType = NodeContext | ElectronContext | ElectronRuntime;
+            contextExecutionType = NodeEnv | ElectronEnv | ElectronRuntime;
         }
         else {
             let runtimeType = NodeRuntime;
@@ -107,10 +104,10 @@ export function GetExecutionContext(): ExecutionContext {
                 runtimeType = ElectronRuntime;
             }
             if (isWebWorker) {
-                contextExecutionType = WorkerContext | runtimeType;
+                contextExecutionType = WorkerEnv | runtimeType;
             }
             else {
-                contextExecutionType = NodeContext | runtimeType;
+                contextExecutionType = NodeEnv | runtimeType;
             }
         }
     }

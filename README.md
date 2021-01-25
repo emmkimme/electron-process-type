@@ -1,7 +1,18 @@
 # electron-process-type
-This is a simple helper which returns the process running your code and API available :
+This is a simple helper which returns the execution context of your code :
 
-Runtime/Api | Node | Browser | Electron
+You know when your code is executed in a :
+- NodeJS process
+- Browser process
+- Electron process
+
+You know when the environment is :
+- NodeJS
+- Browser
+- Worker
+- Electron
+
+Runtime/Environment | Node | Browser | Electron
 ----------- |:----:|:-------:|:--------:|
 Node        | X |   | X |
 Browser     |   | X |   |
@@ -18,7 +29,6 @@ It does not work properly in following contexts :
 * in a renderer when Renderer is in sandbox=true
 * in a renderer when nodeIntegration=false
 * in preload file of a renderer
-
 
 
 Dependencies
@@ -38,7 +48,24 @@ Check if you are running in a Worker.
 ## function IsProcessElectron(): boolean;
 Check if you are running in a Electron process: Electron NodeJS process, Electron Main NodeJS process, Electron browser.
 
+## function GetExecutionContext(): ExecutionContext;
+```ts
+export enum ExecutionContext {
+    Undefined         = 0,
+    Node              = NodeEnv | NodeRuntime,
+    Browser           = BrowserEnv | BrowserRuntime,
+    WebWorker         = WorkerEnv | BrowserRuntime,
+    WorkerThread      = WorkerEnv | NodeRuntime,
+    ElectronThread    = WorkerEnv | ElectronRuntime,
+    ElectronNode      = NodeEnv | ElectronRuntime,
+    ElectronBrowser   = BrowserEnv | ElectronRuntime,
+    ElectronMainNode  = NodeEnv | ElectronEnv | ElectronRuntime
+}
+```
+return the current execution context.
 
+
+# Legacy
 ## v1/GetElectronProcessType(): 'undefined' | 'node' | 'browser' | 'renderer' | 'worker';
 Returns a string compatible with Electron [process.type](https://electronjs.org/docs/api/process#processversionschrome)
 
