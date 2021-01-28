@@ -1,4 +1,4 @@
-const shelljs = require('shelljs');
+const open = require('open');
 const path = require('path');
 
-shelljs.exec(path.join(__dirname, 'browser-tests', 'browser-test.html'));
+open(path.join(__dirname, 'browser-tests', 'browser-test.html'));

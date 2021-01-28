@@ -11154,25 +11154,49 @@ return typeDetect;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],42:[function(require,module,exports){
-(function (process){(function (){
-let processType
-try {
-    processType = process.type
-}
-catch (err) {
-    processType = err
-}
+importScripts('../../node_modules/mocha/mocha.js');
 
-console.log(`process.type=${processType}`);
+mocha.setup({
+    ui: 'bdd',
+    reporter: null,
+  });
 
 const eptModule = require('../../lib');
-const executionContext = eptModule.GetExecutionContext()
+const GetExecutionContextTest = require('../generic-test').GetExecutionContextTest;
+GetExecutionContextTest('GetExecutionContext in renderer process', eptModule.BrowserRuntime | eptModule.WorkerEnv);
 
-const ConvertEC2String = require('../generic-test').ConvertEC2String;
-console.log(`GetExecutionContext=${ConvertEC2String(executionContext)}`);
+mocha.run();
 
-}).call(this)}).call(this,require('_process'))
-},{"../../lib":2,"../generic-test":43,"_process":40}],43:[function(require,module,exports){
+// const eptModule = require('../../lib');
+// function ConvertEC2String(ec) {
+//     let result = [];
+//     if (ec & eptModule.NodeEnv) {
+//         result.push('NodeEnv');
+//     }
+//     if (ec & eptModule.BrowserEnv) {
+//         result.push('BrowserEnv');
+//     }
+//     if (ec & eptModule.ElectronEnv) {
+//         result.push('ElectronEnv');
+//     }
+//     if (ec & eptModule.WorkerEnv) {
+//         result.push('WorkerEnv');
+//     }
+//     if (ec & eptModule.BrowserRuntime) {
+//         result.push('BrowserRuntime');
+//     }
+//     if (ec & eptModule.NodeRuntime) {
+//         result.push('NodeRuntime');
+//     }
+//     if (ec & eptModule.ElectronRuntime) {
+//         result.push('ElectronRuntime');
+//     }
+//     return result.join(',');
+// }
+
+// const result = eptModule.GetExecutionContext();
+// console.info(`Worker = ${ConvertEC2String(result)}`);
+},{"../../lib":2,"../generic-test":43}],43:[function(require,module,exports){
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;

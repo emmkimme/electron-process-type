@@ -1,9 +1,5 @@
-const genericTest = require('./generic-test').genericTest;
+const eptModule = require('../');
 
-genericTest('GetElectronProcessType in Electron renderer process', [
-  'renderer',
-  'renderer',
-  'renderer',
-  'browser',
-  'electron-browser'
-]);
+const GetExecutionContextTest = require('./generic-test').GetExecutionContextTest;
+
+GetExecutionContextTest('GetExecutionContext in Electron renderer process', eptModule.ElectronRuntime | eptModule.BrowserEnv);

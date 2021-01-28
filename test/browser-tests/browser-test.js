@@ -1,10 +1,9 @@
-const genericTest = require('../generic-test').genericTest;
+const eptModule = require('../../lib');
+const GetExecutionContextTest = require('../generic-test').GetExecutionContextTest;
 
-genericTest('GetElectronProcessType in renderer process', [
-  'renderer',
-  'renderer',
-  'renderer',
-  'browser',
-  'browser'
-]);
+GetExecutionContextTest('GetExecutionContext in renderer process', eptModule.BrowserRuntime | eptModule.BrowserEnv);
 
+if (window.Worker) {
+    const myWorker = new Worker("./browser-worker.bundle.js");
+    myWorker;
+}

@@ -1,85 +1,40 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.v4 = exports.v3 = exports.v2 = exports.v1 = exports.GetElectronProcessType = void 0;
-var v1_1 = require("./v1");
-Object.defineProperty(exports, "GetElectronProcessType", { enumerable: true, get: function () { return v1_1.GetElectronProcessType; } });
-const v1_2 = require("./v1");
-const v2_1 = require("./v2");
-const v3_1 = require("./v3");
-const v4_1 = require("./v4");
-var v1;
-(function (v1) {
-    v1.GetElectronProcessType = v1_2.GetElectronProcessType;
-})(v1 = exports.v1 || (exports.v1 = {}));
-var v2;
-(function (v2) {
-    v2.GetElectronProcessType = v2_1.GetElectronProcessType;
-})(v2 = exports.v2 || (exports.v2 = {}));
-var v3;
-(function (v3) {
-    v3.GetElectronProcessType = v3_1.GetElectronProcessType;
-})(v3 = exports.v3 || (exports.v3 = {}));
-var v4;
-(function (v4) {
-    v4.GetElectronProcessType = v4_1.GetElectronProcessType;
-})(v4 = exports.v4 || (exports.v4 = {}));
-__exportStar(require("./execution-context"), exports);
-
-},{"./execution-context":2,"./v1":4,"./v2":6,"./v3":8,"./v4":10}],2:[function(require,module,exports){
 (function (process){(function (){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetExecutionContext = exports.IsProcessElectron = exports.IsContextWorker = exports.IsContextBrowser = exports.IsContextNode = exports.ExecutionContext = exports.ElectronRuntime = exports.BrowserRuntime = exports.NodeRuntime = exports.ElectronContext = exports.WorkerContext = exports.BrowserContext = exports.NodeContext = void 0;
-const isBrowser = (typeof window === 'object')
-    && (typeof navigator === 'object')
-    && (typeof document === 'object');
-const isWebWorker = (typeof self === 'object')
-    && (typeof self.importScripts === 'function')
-    && (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
-const ProcessContextUndefined = 0x00000000;
-exports.NodeContext = 0x00000001;
-exports.BrowserContext = 0x00000010;
-exports.WorkerContext = 0x00000100;
-exports.ElectronContext = 0x00001000;
+exports.GetExecutionContext = exports.IsProcessElectron = exports.IsContextWorker = exports.IsContextBrowser = exports.IsContextNode = exports.ExecutionContext = exports.ElectronRuntime = exports.BrowserRuntime = exports.NodeRuntime = exports.ElectronEnv = exports.WorkerEnv = exports.BrowserEnv = exports.NodeEnv = void 0;
+exports.NodeEnv = 0x00000001;
+exports.BrowserEnv = 0x00000010;
+exports.WorkerEnv = 0x00000100;
+exports.ElectronEnv = 0x00001000;
 exports.NodeRuntime = 0x00010000;
 exports.BrowserRuntime = 0x00100000;
 exports.ElectronRuntime = 0x01000000;
 var ExecutionContext;
 (function (ExecutionContext) {
-    ExecutionContext[ExecutionContext["Undefined"] = ProcessContextUndefined] = "Undefined";
-    ExecutionContext[ExecutionContext["Node"] = exports.NodeContext | exports.NodeRuntime] = "Node";
-    ExecutionContext[ExecutionContext["Browser"] = exports.BrowserContext | exports.BrowserRuntime] = "Browser";
-    ExecutionContext[ExecutionContext["WebWorker"] = exports.WorkerContext | exports.BrowserRuntime] = "WebWorker";
-    ExecutionContext[ExecutionContext["WorkerThread"] = exports.WorkerContext | exports.NodeRuntime] = "WorkerThread";
-    ExecutionContext[ExecutionContext["ElectronThread"] = exports.WorkerContext | exports.ElectronRuntime] = "ElectronThread";
-    ExecutionContext[ExecutionContext["ElectronNode"] = exports.NodeContext | exports.ElectronRuntime] = "ElectronNode";
-    ExecutionContext[ExecutionContext["ElectronBrowser"] = exports.BrowserContext | exports.ElectronRuntime] = "ElectronBrowser";
-    ExecutionContext[ExecutionContext["ElectronMainNode"] = exports.NodeContext | exports.ElectronContext | exports.ElectronRuntime] = "ElectronMainNode";
+    ExecutionContext[ExecutionContext["Undefined"] = 0] = "Undefined";
+    ExecutionContext[ExecutionContext["Node"] = exports.NodeEnv | exports.NodeRuntime] = "Node";
+    ExecutionContext[ExecutionContext["Browser"] = exports.BrowserEnv | exports.BrowserRuntime] = "Browser";
+    ExecutionContext[ExecutionContext["WebWorker"] = exports.WorkerEnv | exports.BrowserRuntime] = "WebWorker";
+    ExecutionContext[ExecutionContext["WorkerThread"] = exports.WorkerEnv | exports.NodeRuntime] = "WorkerThread";
+    ExecutionContext[ExecutionContext["ElectronThread"] = exports.WorkerEnv | exports.ElectronRuntime] = "ElectronThread";
+    ExecutionContext[ExecutionContext["ElectronNode"] = exports.NodeEnv | exports.ElectronRuntime] = "ElectronNode";
+    ExecutionContext[ExecutionContext["ElectronBrowser"] = exports.BrowserEnv | exports.ElectronRuntime] = "ElectronBrowser";
+    ExecutionContext[ExecutionContext["ElectronMain"] = exports.NodeEnv | exports.ElectronEnv | exports.ElectronRuntime] = "ElectronMain";
 })(ExecutionContext = exports.ExecutionContext || (exports.ExecutionContext = {}));
 function IsContextNode() {
     const processContext = GetExecutionContext();
-    return (processContext & exports.NodeContext) === exports.NodeContext;
+    return (processContext & exports.NodeEnv) === exports.NodeEnv;
 }
 exports.IsContextNode = IsContextNode;
 function IsContextBrowser() {
     const processContext = GetExecutionContext();
-    return (processContext & exports.BrowserContext) === exports.BrowserContext;
+    return (processContext & exports.BrowserEnv) === exports.BrowserEnv;
 }
 exports.IsContextBrowser = IsContextBrowser;
 function IsContextWorker() {
     const processContext = GetExecutionContext();
-    return (processContext & exports.WorkerContext) === exports.WorkerContext;
+    return (processContext & exports.WorkerEnv) === exports.WorkerEnv;
 }
 exports.IsContextWorker = IsContextWorker;
 function IsProcessElectron() {
@@ -87,8 +42,22 @@ function IsProcessElectron() {
     return (processContext & exports.ElectronRuntime) === exports.ElectronRuntime;
 }
 exports.IsProcessElectron = IsProcessElectron;
+const isBrowser = (typeof window === 'object')
+    && (typeof navigator === 'object')
+    && (typeof document === 'object');
+const isWebWorker = (typeof self === 'object')
+    && (typeof self.importScripts === 'function')
+    && (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
 function GetExecutionContext() {
     let contextExecutionType = ExecutionContext.Undefined;
+    if (isWebWorker) {
+        if (globalThis.WorkerNavigator != null) {
+            contextExecutionType = exports.WorkerEnv | exports.BrowserEnv;
+        }
+        else {
+            contextExecutionType = exports.WorkerEnv | exports.NodeEnv;
+        }
+    }
     if (isBrowser) {
         let runtimeType = exports.BrowserRuntime;
         if ((typeof process === 'object') && (process.type === 'renderer')) {
@@ -107,16 +76,11 @@ function GetExecutionContext() {
             catch (err) {
             }
         }
-        if (isWebWorker) {
-            contextExecutionType = exports.WorkerContext | runtimeType;
-        }
-        else {
-            contextExecutionType = exports.BrowserContext | runtimeType;
-        }
+        contextExecutionType = exports.BrowserEnv | runtimeType;
     }
     else if (typeof process === 'object') {
         if (process.type === 'browser') {
-            contextExecutionType = exports.NodeContext | exports.ElectronContext | exports.ElectronRuntime;
+            contextExecutionType = exports.NodeEnv | exports.ElectronEnv | exports.ElectronRuntime;
         }
         else {
             let runtimeType = exports.NodeRuntime;
@@ -126,12 +90,7 @@ function GetExecutionContext() {
             else if (process.env['ELECTRON_RUN_AS_NODE']) {
                 runtimeType = exports.ElectronRuntime;
             }
-            if (isWebWorker) {
-                contextExecutionType = exports.WorkerContext | runtimeType;
-            }
-            else {
-                contextExecutionType = exports.NodeContext | runtimeType;
-            }
+            contextExecutionType = exports.NodeEnv | runtimeType;
         }
     }
     return contextExecutionType;
@@ -139,7 +98,7 @@ function GetExecutionContext() {
 exports.GetExecutionContext = GetExecutionContext;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":49,"electron":"electron"}],3:[function(require,module,exports){
+},{"_process":40,"electron":"electron"}],2:[function(require,module,exports){
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -152,180 +111,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./electron-process-type"), exports);
 __exportStar(require("./execution-context"), exports);
 
-},{"./electron-process-type":1,"./execution-context":2}],4:[function(require,module,exports){
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./v1/electron-process-type"), exports);
-
-},{"./v1/electron-process-type":5}],5:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetElectronProcessType = void 0;
-const util = require("../execution-context");
-function GetElectronProcessType() {
-    const electronProcessType = util.GetExecutionContext();
-    switch (electronProcessType) {
-        case util.ExecutionContext.ElectronMainNode:
-            return 'browser';
-        case util.ExecutionContext.Node:
-        case util.ExecutionContext.ElectronNode:
-            return 'node';
-        case util.ExecutionContext.Browser:
-        case util.ExecutionContext.ElectronBrowser:
-            return 'renderer';
-        case util.ExecutionContext.WebWorker:
-        case util.ExecutionContext.WorkerThread:
-            return 'worker';
-        case util.ExecutionContext.Undefined:
-        default:
-            return 'undefined';
-    }
-}
-exports.GetElectronProcessType = GetElectronProcessType;
-
-},{"../execution-context":2}],6:[function(require,module,exports){
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./v2/electron-process-type"), exports);
-
-},{"./v2/electron-process-type":7}],7:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetElectronProcessType = void 0;
-const util = require("../execution-context");
-function GetElectronProcessType() {
-    const electronProcessType = util.GetExecutionContext();
-    switch (electronProcessType) {
-        case util.ExecutionContext.ElectronMainNode:
-            return 'main';
-        case util.ExecutionContext.Node:
-        case util.ExecutionContext.ElectronNode:
-            return 'node';
-        case util.ExecutionContext.Browser:
-        case util.ExecutionContext.ElectronBrowser:
-            return 'renderer';
-        case util.ExecutionContext.WebWorker:
-        case util.ExecutionContext.WorkerThread:
-            return 'worker';
-        case util.ExecutionContext.Undefined:
-        default:
-            return 'undefined';
-    }
-}
-exports.GetElectronProcessType = GetElectronProcessType;
-
-},{"../execution-context":2}],8:[function(require,module,exports){
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./v3/electron-process-type"), exports);
-
-},{"./v3/electron-process-type":9}],9:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetElectronProcessType = void 0;
-const util = require("../execution-context");
-function GetElectronProcessType() {
-    const electronProcessType = util.GetExecutionContext();
-    switch (electronProcessType) {
-        case util.ExecutionContext.ElectronMainNode:
-            return 'main';
-        case util.ExecutionContext.Node:
-        case util.ExecutionContext.ElectronNode:
-            return 'node';
-        case util.ExecutionContext.Browser:
-        case util.ExecutionContext.ElectronBrowser:
-            return 'browser';
-        case util.ExecutionContext.WebWorker:
-        case util.ExecutionContext.WorkerThread:
-            return 'worker';
-        case util.ExecutionContext.Undefined:
-        default:
-            return 'undefined';
-    }
-}
-exports.GetElectronProcessType = GetElectronProcessType;
-
-},{"../execution-context":2}],10:[function(require,module,exports){
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./v4/electron-process-type"), exports);
-
-},{"./v4/electron-process-type":11}],11:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetElectronProcessType = exports.IsProcessElectron = exports.IsProcessBrowser = exports.IsProcessNode = void 0;
-const util = require("../execution-context");
-var execution_context_1 = require("../execution-context");
-Object.defineProperty(exports, "IsProcessNode", { enumerable: true, get: function () { return execution_context_1.IsContextNode; } });
-Object.defineProperty(exports, "IsProcessBrowser", { enumerable: true, get: function () { return execution_context_1.IsContextBrowser; } });
-Object.defineProperty(exports, "IsProcessElectron", { enumerable: true, get: function () { return execution_context_1.IsProcessElectron; } });
-function GetElectronProcessType() {
-    const electronProcessType = util.GetExecutionContext();
-    switch (electronProcessType) {
-        case util.ExecutionContext.ElectronMainNode:
-            return 'electron-main-node';
-        case util.ExecutionContext.Node:
-            return 'node';
-        case util.ExecutionContext.ElectronNode:
-            return 'electron-node';
-        case util.ExecutionContext.Browser:
-            return 'browser';
-        case util.ExecutionContext.ElectronBrowser:
-            return 'electron-browser';
-        case util.ExecutionContext.WebWorker:
-        case util.ExecutionContext.WorkerThread:
-            return 'worker';
-        case util.ExecutionContext.Undefined:
-        default:
-            return 'undefined';
-    }
-}
-exports.GetElectronProcessType = GetElectronProcessType;
-
-},{"../execution-context":2}],12:[function(require,module,exports){
+},{"./execution-context":1}],3:[function(require,module,exports){
 /*!
  * assertion-error
  * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
@@ -443,10 +231,10 @@ AssertionError.prototype.toJSON = function (stack) {
   return props;
 };
 
-},{}],13:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = require('./lib/chai');
 
-},{"./lib/chai":14}],14:[function(require,module,exports){
+},{"./lib/chai":5}],5:[function(require,module,exports){
 /*!
  * chai
  * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -540,7 +328,7 @@ exports.use(should);
 var assert = require('./chai/interface/assert');
 exports.use(assert);
 
-},{"./chai/assertion":15,"./chai/config":16,"./chai/core/assertions":17,"./chai/interface/assert":18,"./chai/interface/expect":19,"./chai/interface/should":20,"./chai/utils":34,"assertion-error":12}],15:[function(require,module,exports){
+},{"./chai/assertion":6,"./chai/config":7,"./chai/core/assertions":8,"./chai/interface/assert":9,"./chai/interface/expect":10,"./chai/interface/should":11,"./chai/utils":25,"assertion-error":3}],6:[function(require,module,exports){
 /*!
  * chai
  * http://chaijs.com
@@ -707,7 +495,7 @@ module.exports = function (_chai, util) {
   });
 };
 
-},{"./config":16}],16:[function(require,module,exports){
+},{"./config":7}],7:[function(require,module,exports){
 module.exports = {
 
   /**
@@ -803,7 +591,7 @@ module.exports = {
   proxyExcludedKeys: ['then', 'catch', 'inspect', 'toJSON']
 };
 
-},{}],17:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*!
  * chai
  * http://chaijs.com
@@ -4609,7 +4397,7 @@ module.exports = function (chai, _) {
   });
 };
 
-},{}],18:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*!
  * chai
  * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -7724,7 +7512,7 @@ module.exports = function (chai, util) {
   ('isNotEmpty', 'notEmpty');
 };
 
-},{}],19:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*!
  * chai
  * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -7773,7 +7561,7 @@ module.exports = function (chai, util) {
   };
 };
 
-},{}],20:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /*!
  * chai
  * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -7993,7 +7781,7 @@ module.exports = function (chai, util) {
   chai.Should = loadShould;
 };
 
-},{}],21:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*!
  * Chai - addChainingMethod utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8147,7 +7935,7 @@ module.exports = function addChainableMethod(ctx, name, method, chainingBehavior
   });
 };
 
-},{"../../chai":14,"./addLengthGuard":22,"./flag":27,"./proxify":42,"./transferFlags":44}],22:[function(require,module,exports){
+},{"../../chai":5,"./addLengthGuard":13,"./flag":18,"./proxify":33,"./transferFlags":35}],13:[function(require,module,exports){
 var fnLengthDesc = Object.getOwnPropertyDescriptor(function () {}, 'length');
 
 /*!
@@ -8209,7 +7997,7 @@ module.exports = function addLengthGuard (fn, assertionName, isChainable) {
   return fn;
 };
 
-},{}],23:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*!
  * Chai - addMethod utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8279,7 +8067,7 @@ module.exports = function addMethod(ctx, name, method) {
   ctx[name] = proxify(methodWrapper, name);
 };
 
-},{"../../chai":14,"./addLengthGuard":22,"./flag":27,"./proxify":42,"./transferFlags":44}],24:[function(require,module,exports){
+},{"../../chai":5,"./addLengthGuard":13,"./flag":18,"./proxify":33,"./transferFlags":35}],15:[function(require,module,exports){
 /*!
  * Chai - addProperty utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8353,7 +8141,7 @@ module.exports = function addProperty(ctx, name, getter) {
   });
 };
 
-},{"../../chai":14,"./flag":27,"./isProxyEnabled":37,"./transferFlags":44}],25:[function(require,module,exports){
+},{"../../chai":5,"./flag":18,"./isProxyEnabled":28,"./transferFlags":35}],16:[function(require,module,exports){
 /*!
  * Chai - compareByInspect utility
  * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8386,7 +8174,7 @@ module.exports = function compareByInspect(a, b) {
   return inspect(a) < inspect(b) ? -1 : 1;
 };
 
-},{"./inspect":35}],26:[function(require,module,exports){
+},{"./inspect":26}],17:[function(require,module,exports){
 /*!
  * Chai - expectTypes utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8439,7 +8227,7 @@ module.exports = function expectTypes(obj, types) {
   }
 };
 
-},{"./flag":27,"assertion-error":12,"type-detect":50}],27:[function(require,module,exports){
+},{"./flag":18,"assertion-error":3,"type-detect":41}],18:[function(require,module,exports){
 /*!
  * Chai - flag utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8474,7 +8262,7 @@ module.exports = function flag(obj, key, value) {
   }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*!
  * Chai - getActual utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8496,7 +8284,7 @@ module.exports = function getActual(obj, args) {
   return args.length > 4 ? args[4] : obj._obj;
 };
 
-},{}],29:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*!
  * Chai - getEnumerableProperties utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8524,7 +8312,7 @@ module.exports = function getEnumerableProperties(object) {
   return result;
 };
 
-},{}],30:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /*!
  * Chai - message composition utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8576,7 +8364,7 @@ module.exports = function getMessage(obj, args) {
   return flagMsg ? flagMsg + ': ' + msg : msg;
 };
 
-},{"./flag":27,"./getActual":28,"./objDisplay":38}],31:[function(require,module,exports){
+},{"./flag":18,"./getActual":19,"./objDisplay":29}],22:[function(require,module,exports){
 /*!
  * Chai - getOwnEnumerableProperties utility
  * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8607,7 +8395,7 @@ module.exports = function getOwnEnumerableProperties(obj) {
   return Object.keys(obj).concat(getOwnEnumerablePropertySymbols(obj));
 };
 
-},{"./getOwnEnumerablePropertySymbols":32}],32:[function(require,module,exports){
+},{"./getOwnEnumerablePropertySymbols":23}],23:[function(require,module,exports){
 /*!
  * Chai - getOwnEnumerablePropertySymbols utility
  * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8636,7 +8424,7 @@ module.exports = function getOwnEnumerablePropertySymbols(obj) {
   });
 };
 
-},{}],33:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*!
  * Chai - getProperties utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8674,7 +8462,7 @@ module.exports = function getProperties(object) {
   return result;
 };
 
-},{}],34:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*!
  * chai
  * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
@@ -8848,7 +8636,7 @@ exports.isProxyEnabled = require('./isProxyEnabled');
 
 exports.isNaN = require('./isNaN');
 
-},{"./addChainableMethod":21,"./addLengthGuard":22,"./addMethod":23,"./addProperty":24,"./compareByInspect":25,"./expectTypes":26,"./flag":27,"./getActual":28,"./getMessage":30,"./getOwnEnumerableProperties":31,"./getOwnEnumerablePropertySymbols":32,"./inspect":35,"./isNaN":36,"./isProxyEnabled":37,"./objDisplay":38,"./overwriteChainableMethod":39,"./overwriteMethod":40,"./overwriteProperty":41,"./proxify":42,"./test":43,"./transferFlags":44,"check-error":45,"deep-eql":46,"get-func-name":47,"pathval":48,"type-detect":50}],35:[function(require,module,exports){
+},{"./addChainableMethod":12,"./addLengthGuard":13,"./addMethod":14,"./addProperty":15,"./compareByInspect":16,"./expectTypes":17,"./flag":18,"./getActual":19,"./getMessage":21,"./getOwnEnumerableProperties":22,"./getOwnEnumerablePropertySymbols":23,"./inspect":26,"./isNaN":27,"./isProxyEnabled":28,"./objDisplay":29,"./overwriteChainableMethod":30,"./overwriteMethod":31,"./overwriteProperty":32,"./proxify":33,"./test":34,"./transferFlags":35,"check-error":36,"deep-eql":37,"get-func-name":38,"pathval":39,"type-detect":41}],26:[function(require,module,exports){
 // This is (almost) directly from Node.js utils
 // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
 
@@ -9226,7 +9014,7 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-},{"../config":16,"./getEnumerableProperties":29,"./getProperties":33,"get-func-name":47}],36:[function(require,module,exports){
+},{"../config":7,"./getEnumerableProperties":20,"./getProperties":24,"get-func-name":38}],27:[function(require,module,exports){
 /*!
  * Chai - isNaN utility
  * Copyright(c) 2012-2015 Sakthipriyan Vairamani <thechargingvolcano@gmail.com>
@@ -9254,7 +9042,7 @@ function isNaN(value) {
 // If ECMAScript 6's Number.isNaN is present, prefer that.
 module.exports = Number.isNaN || isNaN;
 
-},{}],37:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var config = require('../config');
 
 /*!
@@ -9280,7 +9068,7 @@ module.exports = function isProxyEnabled() {
     typeof Reflect !== 'undefined';
 };
 
-},{"../config":16}],38:[function(require,module,exports){
+},{"../config":7}],29:[function(require,module,exports){
 /*!
  * Chai - flag utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9332,7 +9120,7 @@ module.exports = function objDisplay(obj) {
   }
 };
 
-},{"../config":16,"./inspect":35}],39:[function(require,module,exports){
+},{"../config":7,"./inspect":26}],30:[function(require,module,exports){
 /*!
  * Chai - overwriteChainableMethod utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9403,7 +9191,7 @@ module.exports = function overwriteChainableMethod(ctx, name, method, chainingBe
   };
 };
 
-},{"../../chai":14,"./transferFlags":44}],40:[function(require,module,exports){
+},{"../../chai":5,"./transferFlags":35}],31:[function(require,module,exports){
 /*!
  * Chai - overwriteMethod utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9497,7 +9285,7 @@ module.exports = function overwriteMethod(ctx, name, method) {
   ctx[name] = proxify(overwritingMethodWrapper, name);
 };
 
-},{"../../chai":14,"./addLengthGuard":22,"./flag":27,"./proxify":42,"./transferFlags":44}],41:[function(require,module,exports){
+},{"../../chai":5,"./addLengthGuard":13,"./flag":18,"./proxify":33,"./transferFlags":35}],32:[function(require,module,exports){
 /*!
  * Chai - overwriteProperty utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9591,7 +9379,7 @@ module.exports = function overwriteProperty(ctx, name, getter) {
   });
 };
 
-},{"../../chai":14,"./flag":27,"./isProxyEnabled":37,"./transferFlags":44}],42:[function(require,module,exports){
+},{"../../chai":5,"./flag":18,"./isProxyEnabled":28,"./transferFlags":35}],33:[function(require,module,exports){
 var config = require('../config');
 var flag = require('./flag');
 var getProperties = require('./getProperties');
@@ -9740,7 +9528,7 @@ function stringDistanceCapped(strA, strB, cap) {
   return memo[strA.length][strB.length];
 }
 
-},{"../config":16,"./flag":27,"./getProperties":33,"./isProxyEnabled":37}],43:[function(require,module,exports){
+},{"../config":7,"./flag":18,"./getProperties":24,"./isProxyEnabled":28}],34:[function(require,module,exports){
 /*!
  * Chai - test utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9770,7 +9558,7 @@ module.exports = function test(obj, args) {
   return negate ? !expr : expr;
 };
 
-},{"./flag":27}],44:[function(require,module,exports){
+},{"./flag":18}],35:[function(require,module,exports){
 /*!
  * Chai - transferFlags utility
  * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9817,7 +9605,7 @@ module.exports = function transferFlags(assertion, object, includeAll) {
   }
 };
 
-},{}],45:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 /* !
@@ -9991,7 +9779,7 @@ module.exports = {
   getConstructorName: getConstructorName,
 };
 
-},{}],46:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 /* globals Symbol: false, Uint8Array: false, WeakMap: false */
 /*!
@@ -10448,7 +10236,7 @@ function isPrimitive(value) {
   return value === null || typeof value !== 'object';
 }
 
-},{"type-detect":50}],47:[function(require,module,exports){
+},{"type-detect":41}],38:[function(require,module,exports){
 'use strict';
 
 /* !
@@ -10494,7 +10282,7 @@ function getFuncName(aFunc) {
 
 module.exports = getFuncName;
 
-},{}],48:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 /* !
@@ -10787,7 +10575,7 @@ module.exports = {
   setPathValue: setPathValue,
 };
 
-},{}],49:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -10973,7 +10761,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],50:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 (function (global){(function (){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -11365,19 +11153,17 @@ return typeDetect;
 })));
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],51:[function(require,module,exports){
-const genericTest = require('../generic-test').genericTest;
+},{}],42:[function(require,module,exports){
+const eptModule = require('../../lib');
+const GetExecutionContextTest = require('../generic-test').GetExecutionContextTest;
 
-genericTest('GetElectronProcessType in renderer process', [
-  'renderer',
-  'renderer',
-  'renderer',
-  'browser',
-  'browser'
-]);
+GetExecutionContextTest('GetExecutionContext in renderer process', eptModule.BrowserRuntime | eptModule.BrowserEnv);
 
-
-},{"../generic-test":52}],52:[function(require,module,exports){
+if (window.Worker) {
+    const myWorker = new Worker("./browser-worker.bundle.js");
+    myWorker;
+}
+},{"../../lib":2,"../generic-test":43}],43:[function(require,module,exports){
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
@@ -11396,19 +11182,19 @@ function Title(context) {
 }
 
 const eptModule = require('../lib');
-function convertEC2String(ec) {
+function ConvertEC2String(ec) {
   let result = [];
-  if (ec & eptModule.NodeContext) {
-    result.push('NodeContext');
+  if (ec & eptModule.NodeEnv) {
+    result.push('NodeEnv');
   }
-  if (ec & eptModule.BrowserContext) {
-    result.push('BrowserContext');
+  if (ec & eptModule.BrowserEnv) {
+    result.push('BrowserEnv');
   }
-  if (ec & eptModule.ElectronContext) {
-    result.push('ElectronContext');
+  if (ec & eptModule.ElectronEnv) {
+    result.push('ElectronEnv');
   }
-  if (ec & eptModule.WorkerContext) {
-    result.push('WorkerContext');
+  if (ec & eptModule.WorkerEnv) {
+    result.push('WorkerEnv');
   }
   if (ec & eptModule.BrowserRuntime) {
     result.push('BrowserRuntime');
@@ -11422,54 +11208,20 @@ function convertEC2String(ec) {
   return result.join(',');
 }
 
-function genericTest(name, expectedResuls) {
+function GetExecutionContextTest(name, expectedResult) {
 
   describe(name, () => {
-    it(`v1`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[0]);
-    });
-
-    it(`v2 - 1`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v2.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[1]);
-    });
-    it(`v2 - 2`, function () {
-      const electronProcessTypeModule = require('../lib/v2');
-      const result = electronProcessTypeModule.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[2]);
-    });
-
-    it(`v3`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v3.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[3]);
-    });
-
-    it(`v4`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v4.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[4]);
-    });
-
     it(`ExecutionContext`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.GetExecutionContext();
-      console.info(`${Title(this)} = ${convertEC2String(result)}`);
-      // expect(electronProcessTypeModule.GetExecutionContext()).to.equal('node');
+      const eptModule = require('../lib');
+      const result = eptModule.GetExecutionContext();
+      console.info(`${Title(this)} = ${ConvertEC2String(result)}`);
+      expect(result).to.equal(expectedResult);
     });
   });
 }
 
 
-exports.genericTest = genericTest;
+exports.GetExecutionContextTest = GetExecutionContextTest;
+exports.ConvertEC2String = ConvertEC2String;
 
-
-},{"../lib":3,"../lib/v2":6,"chai":13}]},{},[51]);
+},{"../lib":2,"chai":4}]},{},[42]);

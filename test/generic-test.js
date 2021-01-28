@@ -16,19 +16,19 @@ function Title(context) {
 }
 
 const eptModule = require('../lib');
-function convertEC2String(ec) {
+function ConvertEC2String(ec) {
   let result = [];
-  if (ec & eptModule.NodeContext) {
-    result.push('NodeContext');
+  if (ec & eptModule.NodeEnv) {
+    result.push('NodeEnv');
   }
-  if (ec & eptModule.BrowserContext) {
-    result.push('BrowserContext');
+  if (ec & eptModule.BrowserEnv) {
+    result.push('BrowserEnv');
   }
-  if (ec & eptModule.ElectronContext) {
-    result.push('ElectronContext');
+  if (ec & eptModule.ElectronEnv) {
+    result.push('ElectronEnv');
   }
-  if (ec & eptModule.WorkerContext) {
-    result.push('WorkerContext');
+  if (ec & eptModule.WorkerEnv) {
+    result.push('WorkerEnv');
   }
   if (ec & eptModule.BrowserRuntime) {
     result.push('BrowserRuntime');
@@ -42,52 +42,18 @@ function convertEC2String(ec) {
   return result.join(',');
 }
 
-function genericTest(name, expectedResuls) {
+function GetExecutionContextTest(name, expectedResult) {
 
   describe(name, () => {
-    it(`v1`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[0]);
-    });
-
-    it(`v2 - 1`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v2.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[1]);
-    });
-    it(`v2 - 2`, function () {
-      const electronProcessTypeModule = require('../lib/v2');
-      const result = electronProcessTypeModule.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[2]);
-    });
-
-    it(`v3`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v3.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[3]);
-    });
-
-    it(`v4`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.v4.GetElectronProcessType();
-      console.info(`${Title(this)} = ${result}`);
-      expect(result).to.equal(expectedResuls[4]);
-    });
-
     it(`ExecutionContext`, function () {
-      const electronProcessTypeModule = require('../lib');
-      const result = electronProcessTypeModule.GetExecutionContext();
-      console.info(`${Title(this)} = ${convertEC2String(result)}`);
-      // expect(electronProcessTypeModule.GetExecutionContext()).to.equal('node');
+      const eptModule = require('../lib');
+      const result = eptModule.GetExecutionContext();
+      console.info(`${Title(this)} = ${ConvertEC2String(result)}`);
+      expect(result).to.equal(expectedResult);
     });
   });
 }
 
 
-exports.genericTest = genericTest;
-
+exports.GetExecutionContextTest = GetExecutionContextTest;
+exports.ConvertEC2String = ConvertEC2String;

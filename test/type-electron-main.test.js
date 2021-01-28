@@ -1,9 +1,4 @@
-const genericTest = require('./generic-test').genericTest;
+const eptModule = require('../');
+const GetExecutionContextTest = require('./generic-test').GetExecutionContextTest;
 
-genericTest('GetElectronProcessType in Electron main process', [
-  'browser',
-  'main',
-  'main',
-  'main',
-  'electron-main-node'
-]);
+GetExecutionContextTest('GetExecutionContext in Electron main process', eptModule.ElectronRuntime | eptModule.NodeEnv | eptModule.ElectronEnv);

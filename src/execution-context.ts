@@ -1,15 +1,5 @@
 /// <reference types='electron'/>
-
 // Needed for having process.type property
-
-// Helpers
-const isBrowser = (typeof window === 'object')
-&& (typeof navigator === 'object')
-&& (typeof document === 'object')
-
-const isWebWorker = (typeof self === 'object')
-&& (typeof self.importScripts === 'function')
-&& (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
 
 // Types of environment
 export const NodeEnv      = 0x00000001;
@@ -31,7 +21,7 @@ export enum ExecutionContext {
     ElectronThread    = WorkerEnv | ElectronRuntime,
     ElectronNode      = NodeEnv | ElectronRuntime,
     ElectronBrowser   = BrowserEnv | ElectronRuntime,
-    ElectronMainNode  = NodeEnv | ElectronEnv | ElectronRuntime
+    ElectronMain      = NodeEnv | ElectronEnv | ElectronRuntime
 }
 
 export function IsContextNode(): boolean {
@@ -54,11 +44,27 @@ export function IsProcessElectron(): boolean {
     return (processContext & ElectronRuntime) === ElectronRuntime;
 }
 
-/** @internal */
+// Helpers
+const isBrowser = (typeof window === 'object')
+&& (typeof navigator === 'object')
+&& (typeof document === 'object')
+
+const isWebWorker = (typeof self === 'object')
+&& (typeof self.importScripts === 'function')
+&& (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
+
 export function GetExecutionContext(): ExecutionContext {
     // By default
     let contextExecutionType = ExecutionContext.Undefined;
     // Use what it seems the most relevant method for detecting if we are in a browser
+    if (isWebWorker) {
+        if ((globalThis.WorkerNavigator as any) != null) {
+            contextExecutionType = WorkerEnv | BrowserRuntime;
+        }
+        else {
+            contextExecutionType = WorkerEnv | NodeRuntime;
+        }
+    }
     if (isBrowser) {
         let runtimeType = BrowserRuntime;
         // Try the official Electron method
@@ -83,12 +89,7 @@ export function GetExecutionContext(): ExecutionContext {
             catch (err) {
             }
         }
-        if (isWebWorker) {
-            contextExecutionType = WorkerEnv | runtimeType;
-        }
-        else {
-            contextExecutionType = BrowserEnv | runtimeType;
-        }
+        contextExecutionType = BrowserEnv | runtimeType;
     }
     else if (typeof process ==='object') {
         // Try the official Electron method
@@ -103,12 +104,7 @@ export function GetExecutionContext(): ExecutionContext {
             else if (process.env['ELECTRON_RUN_AS_NODE']) {
                 runtimeType = ElectronRuntime;
             }
-            if (isWebWorker) {
-                contextExecutionType = WorkerEnv | runtimeType;
-            }
-            else {
-                contextExecutionType = NodeEnv | runtimeType;
-            }
+            contextExecutionType = NodeEnv | runtimeType;
         }
     }
     return contextExecutionType;
