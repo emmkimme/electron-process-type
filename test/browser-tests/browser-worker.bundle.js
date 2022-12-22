@@ -13965,8 +13965,8 @@ function GetExecutionContextTest(name, expectedResult) {
     it(`ExecutionContext`, function () {
       const eptModule = require('../lib');
       const result = eptModule.GetExecutionContext();
-      console.info(`${Title(this)} = ${ConvertEC2String(result)}`);
-      expect(result).to.equal(expectedResult);
+      console.info(`${Title(this)} = ${ConvertEC2String(result)} = ${ConvertEC2String(expectedResult)}`);
+      expect(result).to.equal(expectedResult, `${ConvertEC2String(result)} !== ${ConvertEC2String(expectedResult)}`);
     });
   });
 }
