@@ -1,141 +1,67 @@
-# electron-process-type
+# JavaScript Execution Context (electron-process-type)
+A function which returns the execution environment of your code.
+
+Detect the engine which is executing your code:
+- NodeJS runtime
+- Browser runtime
+- Electron runtime
+
+detect which are the environments / API(s) available :
+- NodeJS
+- Browser
+- Worker
+- Electron
+
+Runtime | Node | Browser | Electron
+-------------- |:----:|:---------:|:--------:|
+NodeJS API     | Node.js process |           | Electron Node.js process
+Browser API    |         | Browser | Electron Renderer or preload
+Worker API     | WorkerThread | WebWorker | Electron Worker
+Electron API   |         | Electron preload | Electron main process
+
+Worker, ServiceWorker, SharedWorker detection is still experimental/partial
+
 This API works in any kind of processes (not only Electron): Electron, Node, Browser, ...
 
-The Electron process.type has some limitations.
-It does not work in following context :
+In Electron, the detection uses the Electron API [process.type](https://electronjs.org/docs/api/process#processversionschrome) but there is some limitations.  
+It does not work properly in following contexts :
 * in a node process
 * in a renderer when Chromium is in sandbox (--enable-sandbox=true)
 * in a renderer when Renderer is in sandbox=true
 * in a renderer when nodeIntegration=false
 * in preload file of a renderer
 
-This is a simple helper which returns the process type hosting your code whatever the context :
-- 'node' / 'electron-node' (NodeJS API but No Electron API available)
-- 'browser' / 'main' / 'electron-main-node' (NodeJS and Electron APIs available)
-- 'renderer' / 'browser' / 'electron-browser' (Browser API)
-- 'worker'
-
-There are different versions which use either Electron semantic (renderer, main) or Browser semantic (browser, electron-main-node).
 
 Dependencies
 * http://nodejs.org/
 
 
 # API
-## v1/GetElectronProcessType(): 'undefined' | 'node' | 'browser' | 'renderer' | 'worker';
-Returns a string compatible with Electron [process.type](https://electronjs.org/docs/api/process#processversionschrome)
-
+## function GetExecutionContext(): ExecutionContext;
 ```ts
-import { GetElectronProcessType } from 'electron-process-type';
-
-export function CreateEnvironment(): Environment {
-    const processType = GetElectronProcessType();
-    switch (processType) {
-        case 'renderer': {
-            const { EnvironmentRenderer } = require('./envRenderer');
-            localInstance = new EnvironmentRenderer();
-            break;
-        }
-        case 'browser': {
-            const { EnvironmentMaster } = require('./envMaster');
-            localInstance = new EnvironmentMaster();
-            break;
-        }
-        case 'worker': {
-            const { EnvironmentMaster } = require('./envWorker');
-            localInstance = new EnvironmentMaster();
-            break;
-        }
-        default: {
-            const { EnvironmentNode } = require('./envNode');
-            localInstance = new EnvironmentNode();
-            break;
-        }
-    }
-    return localInstance;
+export enum ExecutionContext {
+    Undefined         = 0,
+    Node              = NodeEnv | NodeRuntime,
+    Browser           = BrowserEnv | BrowserRuntime,
+    WebWorker         = WorkerEnv | BrowserRuntime,
+    WorkerThread      = WorkerEnv | NodeRuntime,
+    ElectronWorker    = WorkerEnv | ElectronRuntime,
+    ElectronNode      = NodeEnv | ElectronRuntime,
+    ElectronRenderer  = BrowserEnv | ElectronRuntime,
+    ElectronPreload   = BrowserEnv | ElectronEnv | ElectronRuntime,
+    ElectronMain      = NodeEnv | ElectronEnv | ElectronRuntime
 }
 ```
+return the current execution context.
 
-## v2/GetElectronProcessType(): 'undefined' | 'node' | 'main' | 'renderer' | 'worker';
-The process.type *'browser'* introduces a lot of confusions as the notion of 'browser' process is more considered as a 'renderer' process : browserify, index-browser, [Browser or Node](https://github.com/flexdinesh/browser-or-node), ...  
-As Electron documentation, we use the term of 'main' rather than 'browser'. We keep 'renderer'.
+## function IsContextNode(): boolean
+Check if you are running in a NodeJS context: pure NodeJS process, Electron NodeJS process, Electron Main NodeJS process.
 
-```ts
-import { GetElectronProcessType } from 'electron-process-type/lib/v2';
+## function IsContextBrowser(): boolean;
+Check if you are running in a Browser (Navigator) context: pure Browser, Electron browser.
 
-export function CreateEnvironment(): Environment {
-    const processType = GetElectronProcessType();
-    switch (processType) {
-        case 'renderer':
-            ...
-            break;
+## function IsContextWorker(): boolean;
+Check if you are running in a Worker.
 
-        case 'node':
-        case 'main':
-            ...
-            break;
-
-        default:
-            ...
-            break;
-    }
-    return localInstance;
-}
-```
-
-## v3/GetElectronProcessType(): 'undefined' | 'node' | 'main' | 'browser' | 'worker';
-*BEWARE 'renderer' becomes 'browser' !!*
-
-```ts
-import * as electronProcessType from 'electron-process-type';
-
-export function CreateEnvironment(): Environment {
-    const processType = electronProcessType.v3.GetElectronProcessType();
-    switch (processType) {
-        case 'browser':
-            ...
-            break;
-
-        case 'node':
-        case 'main':
-            ...
-            break;
-
-        default:
-            ...
-            break;
-    }
-    return localInstance;
-}
-```
-
-## v4/GetElectronProcessType(): 'undefined' | 'electron-node' | 'electron-main-node' | 'electron-browser' | 'browser' | 'node' | 'worker';
-Identify node process running under Electron ('electron-node' / 'electron-main-node') vs pure node process ('node')
-```ts
-import * as electronProcessType from 'electron-process-type';
-
-export function CreateEnvironment(): Environment {
-    const processType = electronProcessType.v4.GetElectronProcessType();
-    switch (processType) {
-        case 'browser':
-            ...
-            break;
-
-        case 'node':
-        case 'electron-node':
-        case 'electron-main-node':
-            ...
-            break;
-    
-        case 'worker':
-            ...
-            break;
-
-        default:
-            ...
-            break;
-    }
-    return localInstance;
-}
-```
-
+## function IsProcessElectron(): boolean;
+Check if you are running in a Electron process: Electron NodeJS process, Electron Main NodeJS process, Electron browser.

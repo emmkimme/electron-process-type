@@ -5,9 +5,6 @@
         "outDir": "../lib"
     },
 	"files": [
-		"../src/index.ts",
-		"../src/v1.ts",
-		"../src/v2.ts",
-		"../src/v3.ts"
+		"../src/index.ts"
 	]
 }

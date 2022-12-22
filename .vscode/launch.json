@@ -40,9 +40,12 @@
                 "protocol": "inspector",
            
                 "sourceMaps": true,
+
+                "runtimeArgs": [
+                    "--inspect-brk=5858",
+                ],
            
                 "args": [
-                    "--inspect-brk=5858",
                     "test/type-electron-*.test.js",
                     "--no-timeouts"
                 ],

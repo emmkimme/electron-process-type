@@ -38,7 +38,7 @@ function RunMochaNode(args) {
     });
 }
 
-describe('GetElectronProcessType in Electron node launcher', function () {
+describe('GetExecutionContext in Electron node launcher', function () {
     it('Node.js process', () => {
         return RunMochaNode([
             path.join(__dirname, 'type-electron-node.script.js'),

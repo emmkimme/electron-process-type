@@ -13872,41 +13872,49 @@ return typeDetect;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],47:[function(require,module,exports){
-(function (process){(function (){
+importScripts('../../node_modules/mocha/mocha.js');
 
-window.addEventListener('load', () => {
-    let processType
-    try {
-        processType = process.type
-    }
-    catch (err) {
-        processType = err
-    }
+mocha.setup({
+    ui: 'bdd',
+    reporter: null,
+  });
 
-    const eptModule = require('../../lib');
-    const executionContext = eptModule.GetExecutionContext()
-    console.log(`GetExecutionContext=${executionContext}`);
+const eptModule = require('../../lib');
+const GetExecutionContextTest = require('../generic-test').GetExecutionContextTest;
+GetExecutionContextTest('GetExecutionContext in renderer process', eptModule.BrowserRuntime | eptModule.WorkerEnv);
 
-    const ConvertEC2String = require('../generic-test').ConvertEC2String;
-    
-    document.open();
-    document.write(`<h1>Test process!</h1>`);
-    document.write(`<br>`);
-    document.write(`GetExecutionContext=${ConvertEC2String(executionContext)}`);
-    document.write(`<br>`);
+mocha.run();
 
-    const preloadGetExecutionContextResult = window.PreloadGetExecutionContextResult;
-    if (preloadGetExecutionContextResult != null) {
-        document.write(`<br>`);
-        document.write(`Preload GetExecutionContext=${ConvertEC2String(preloadGetExecutionContextResult)}`);
-        document.write(`<br>`);
-    }
+// const eptModule = require('../../lib');
+// function ConvertEC2String(ec) {
+//     let result = [];
+//     if (ec & eptModule.NodeEnv) {
+//         result.push('NodeEnv');
+//     }
+//     if (ec & eptModule.BrowserEnv) {
+//         result.push('BrowserEnv');
+//     }
+//     if (ec & eptModule.ElectronEnv) {
+//         result.push('ElectronEnv');
+//     }
+//     if (ec & eptModule.WorkerEnv) {
+//         result.push('WorkerEnv');
+//     }
+//     if (ec & eptModule.BrowserRuntime) {
+//         result.push('BrowserRuntime');
+//     }
+//     if (ec & eptModule.NodeRuntime) {
+//         result.push('NodeRuntime');
+//     }
+//     if (ec & eptModule.ElectronRuntime) {
+//         result.push('ElectronRuntime');
+//     }
+//     return result.join(',');
+// }
 
-    document.close();
-})
-
-}).call(this)}).call(this,require('_process'))
-},{"../../lib":2,"../generic-test":48,"_process":45}],48:[function(require,module,exports){
+// const result = eptModule.GetExecutionContext();
+// console.info(`Worker = ${ConvertEC2String(result)}`);
+},{"../../lib":2,"../generic-test":48}],48:[function(require,module,exports){
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;

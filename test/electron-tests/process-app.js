@@ -34,15 +34,21 @@ function createWindow(title, webPreferences) {
 
 function createWindows() {
     done = true
-    createWindow('{}', {})
-    createWindow('nodeIntegration: false', { nodeIntegration: false })
-    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true })
-    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true })
+    
+    const defaultOptions = { contextIsolation: false };
 
-    createWindow('{}', { preload: path.join(__dirname, 'process-page-preload.bundle.js') })
-    createWindow('nodeIntegration: false', { nodeIntegration: false, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
-    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
-    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js') })
+    createWindow('{}', { ...defaultOptions })
+    createWindow('nodeIntegration: false', { nodeIntegration: false, ...defaultOptions })
+    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true, ...defaultOptions })
+    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true, ...defaultOptions })
+
+    createWindow('{}', { preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
+    createWindow('nodeIntegration: false', { nodeIntegration: false, preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
+    createWindow('nodeIntegration: false, sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
+    createWindow('sandbox: true', { nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
+
+    createWindow('nodeIntegration: true', { nodeIntegration: true, preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
+    createWindow('nodeIntegration: true, sandbox: true', { nodeIntegration: true, sandbox: true, preload: path.join(__dirname, 'process-page-preload.bundle.js'), ...defaultOptions })
 }
 
 // This method will be called when Electron has finished
