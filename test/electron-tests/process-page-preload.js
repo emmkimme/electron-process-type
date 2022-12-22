@@ -13,3 +13,5 @@ const executionContext = eptModule.GetExecutionContext()
 
 const ConvertEC2String = require('../generic-test').ConvertEC2String;
 console.log(`GetExecutionContext=${ConvertEC2String(executionContext)}`);
+
+window.PreloadGetExecutionContextResult = executionContext;

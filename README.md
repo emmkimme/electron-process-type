@@ -1,34 +1,25 @@
 # JavaScript Execution Context (electron-process-type)
-A function which returns the execution context of your code.
+A function which returns the execution environment of your code.
 
-You know the engine which is executing your code:
+Detect the engine which is executing your code:
 - NodeJS runtime
 - Browser runtime
-- Electron runtime (NodeJS and Chromium, depends of the environment)
+- Electron runtime
 
-You know which are the environments / api available :
+detect which are the environments / API(s) available :
 - NodeJS
 - Browser
 - Worker
 - Electron
 
-Runtime / Environment | Node | Browser | Electron
------------ |:----:|:-------:|:--------:|
-Node        | X |   | X |
-Browser     |   | X | X |
-Worker      | WorkerThread | WebWorker | X |
-Electron    |   |   | X |
-
-Few examples :
-- Electron runtime + Browser env = Electron renderer
-- Electron runtime + Node env + Electron env = Electron main process
-- Electron runtime + Node env = Electron NodeJS process
-- Browser runtime + Browser env = Pure browser
-- NodeJS runtime + NodeJS env = Pure NodeJS process
-- ...
+Runtime | Node | Browser | Electron
+-------------- |:----:|:---------:|:--------:|
+NodeJS API     | Node.js process |           | Electron Node.js process
+Browser API    |         | Browser | Electron Renderer or preload
+Worker API     | WorkerThread | WebWorker | Electron Worker
+Electron API   |         | Electron preload | Electron main process
 
 Worker, ServiceWorker, SharedWorker detection is still experimental/partial
-
 
 This API works in any kind of processes (not only Electron): Electron, Node, Browser, ...
 
@@ -54,9 +45,10 @@ export enum ExecutionContext {
     Browser           = BrowserEnv | BrowserRuntime,
     WebWorker         = WorkerEnv | BrowserRuntime,
     WorkerThread      = WorkerEnv | NodeRuntime,
-    ElectronThread    = WorkerEnv | ElectronRuntime,
+    ElectronWorker    = WorkerEnv | ElectronRuntime,
     ElectronNode      = NodeEnv | ElectronRuntime,
-    ElectronBrowser   = BrowserEnv | ElectronRuntime,
+    ElectronRenderer  = BrowserEnv | ElectronRuntime,
+    ElectronPreload   = BrowserEnv | ElectronEnv | ElectronRuntime,
     ElectronMain      = NodeEnv | ElectronEnv | ElectronRuntime
 }
 ```

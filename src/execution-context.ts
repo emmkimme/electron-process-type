@@ -1,7 +1,7 @@
 /// <reference types='electron'/>
 // Needed for having process.type property
 
-// Types of environment
+// Types of environment / api
 export const NodeEnv      = 0x00000001;
 export const BrowserEnv   = 0x00000010;
 export const WorkerEnv    = 0x00000100;
@@ -18,9 +18,10 @@ export enum ExecutionContext {
     Browser           = BrowserEnv | BrowserRuntime,
     WebWorker         = WorkerEnv | BrowserRuntime,
     WorkerThread      = WorkerEnv | NodeRuntime,
-    ElectronThread    = WorkerEnv | ElectronRuntime,
+    ElectronWorker    = WorkerEnv | ElectronRuntime,
     ElectronNode      = NodeEnv | ElectronRuntime,
-    ElectronBrowser   = BrowserEnv | ElectronRuntime,
+    ElectronRenderer  = BrowserEnv | ElectronRuntime,
+    ElectronPreload   = BrowserEnv | ElectronEnv | ElectronRuntime,
     ElectronMain      = NodeEnv | ElectronEnv | ElectronRuntime
 }
 
@@ -44,67 +45,77 @@ export function IsProcessElectron(): boolean {
     return (processContext & ElectronRuntime) === ElectronRuntime;
 }
 
-// Helpers
-const isBrowser = (typeof window === 'object')
-&& (typeof navigator === 'object')
-&& (typeof document === 'object')
-
-const isWebWorker = (typeof self === 'object')
-&& (typeof self.importScripts === 'function')
-&& (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
-
 export function GetExecutionContext(): ExecutionContext {
+    // Helpers
+    const isBrowser = (typeof window === 'object')
+        && (typeof navigator === 'object')
+        && (typeof document === 'object')
+
+    const isWebWorker = (typeof self === 'object')
+        && (typeof self.importScripts === 'function')
+        && (self.constructor && (self.constructor.name === 'DedicatedWorkerGlobalScope') || (self.constructor.name === 'WorkerGlobalScope'));
+
+    const isElectronInProcess = typeof process !== 'undefined'
+        && typeof process.versions !== 'undefined'
+        && typeof process.versions.electron !== 'undefined';
+
+    const isElectronInUserAgent = (typeof navigator === 'object')
+        && (typeof navigator.userAgent === 'string')
+        && (navigator.userAgent.indexOf('Electron/') >= 0);
+
+    const isNode = (typeof module !== 'undefined' && !!module.exports);
+
+    // const isElectronNodeIntegrationWebWorker = isWebWorker && (isElectron && process.type === 'worker');
+
     // By default
     let contextExecutionType = ExecutionContext.Undefined;
-    // Use what it seems the most relevant method for detecting if we are in a browser
-    if (isWebWorker) {
+    // Try the official Electron method
+    if (isElectronInProcess && (process.type === 'worker')) {
+        contextExecutionType = ExecutionContext.ElectronWorker;
+    }
+    else if (isWebWorker) {
         if ((globalThis.WorkerNavigator as any) != null) {
-            contextExecutionType = WorkerEnv | BrowserRuntime;
+            contextExecutionType = ExecutionContext.WebWorker;
         }
         else {
-            contextExecutionType = WorkerEnv | NodeRuntime;
+            contextExecutionType = ExecutionContext.WorkerThread;
         }
     }
-    if (isBrowser) {
-        let runtimeType = BrowserRuntime;
+    else if (isBrowser) {
         // Try the official Electron method
-        if ((typeof process ==='object') && (process.type === 'renderer')) {
-            runtimeType = ElectronRuntime;
-        }
-        // 'process.type' may be null
-        // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox, webPreferences.sandbox = true)
-        // - in a renderer process with nodeIntegration=false
-        // - in a renderer process preload with sandbox=true
-        else if ((typeof navigator === 'object') && (typeof navigator.appVersion === 'string') && (navigator.appVersion.indexOf(' Electron/') >= 0)) {
-            runtimeType = ElectronRuntime;
-        }
-        else {
+        if ((isElectronInProcess && (process.type === 'renderer'))
+            // 'process.type' may be null
+            // - in a renderer process with Chomium sandbox mode enabled (--enable-sandbox, webPreferences.sandbox = true)
+            // - in a renderer process with nodeIntegration=false
+            // - in a renderer process preload with sandbox=true
+            || isElectronInUserAgent) {
+            contextExecutionType = ExecutionContext.ElectronRenderer;
             try {
-                // Would work in a preload
+                // Should work in a preload only
                 const electron = require('electron');
                 if (electron.ipcRenderer) {
-                    runtimeType = ElectronRuntime;
+                    contextExecutionType = ExecutionContext.ElectronPreload;
                 }
             }
             catch (err) {
             }
         }
-        contextExecutionType = BrowserEnv | runtimeType;
+        else {
+            contextExecutionType = ExecutionContext.Browser;
+        }
     }
-    else if (typeof process ==='object') {
+    else if (isNode) {
         // Try the official Electron method
         if (process.type === 'browser') {
-            contextExecutionType = NodeEnv | ElectronEnv | ElectronRuntime;
+            contextExecutionType = ExecutionContext.ElectronMain;
         }
         else {
-            let runtimeType = NodeRuntime;
-            if ((typeof process.versions === 'object') && (typeof process.versions.electron === 'string')) {
-                runtimeType = ElectronRuntime;
+            if (isElectronInProcess || (process.env['ELECTRON_RUN_AS_NODE'])) {
+                contextExecutionType = ExecutionContext.ElectronNode;
             }
-            else if (process.env['ELECTRON_RUN_AS_NODE']) {
-                runtimeType = ElectronRuntime;
+            else {
+                contextExecutionType = ExecutionContext.Node;
             }
-            contextExecutionType = NodeEnv | runtimeType;
         }
     }
     return contextExecutionType;

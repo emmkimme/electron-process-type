@@ -19,5 +19,13 @@ window.addEventListener('load', () => {
     document.write(`<br>`);
     document.write(`GetExecutionContext=${ConvertEC2String(executionContext)}`);
     document.write(`<br>`);
+
+    const preloadGetExecutionContextResult = window.PreloadGetExecutionContextResult;
+    if (preloadGetExecutionContextResult != null) {
+        document.write(`<br>`);
+        document.write(`Preload GetExecutionContext=${ConvertEC2String(preloadGetExecutionContextResult)}`);
+        document.write(`<br>`);
+    }
+
     document.close();
 })
